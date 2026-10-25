@@ -1,0 +1,284 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("STUDENT") // STUDENT, ADMIN, INTERVIEWER
+  avatar       String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  studentProfile      StudentProfile?
+  testAttempts        TestAttempt[]
+  practiceLogs        PracticeLog[]
+  codingSubmissions   CodingSubmission[]
+  interviewsAsStudent MockInterview[]    @relation("StudentInterviews")
+  interviewsAsMentor  MockInterview[]    @relation("MentorInterviews")
+  resumeAnalyses      ResumeAnalysis[]
+  notifications       Notification[]
+  bookmarks           Bookmark[]
+}
+
+model StudentProfile {
+  id               String            @id @default(uuid())
+  userId           String            @unique
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college          String
+  branch           String
+  gradYear         Int
+  cgpa             Float
+  targetRoles      String            // JSON array string: ["SDE", "Data Analyst"]
+  targetCompanies  String            // JSON array string: ["TCS", "Amazon"]
+  skillLevel       String            // BEGINNER, INTERMEDIATE, ADVANCED
+  preferredLang    String            // Python, Java, C++, JavaScript
+  dailyHours       Float             @default(2.0)
+  targetDate       DateTime?
+  strengths        String?           // JSON array string
+  weakAreas        String?           // JSON array string
+  readinessScore   Float             @default(0.0)
+  streakDays       Int               @default(1)
+  lastActiveDate   DateTime?
+  onboardingDone   Boolean           @default(false)
+  roadmapDuration  Int               @default(60) // 30, 60, 90 days
+
+  roadmapTasks     RoadmapTask[]
+  diagnosticResult DiagnosticResult?
+}
+
+model DiagnosticResult {
+  id                String         @id @default(uuid())
+  profileId         String         @unique
+  profile           StudentProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  overallScore      Float
+  quantScore        Float
+  logicalScore      Float
+  verbalScore       Float
+  codingScore       Float
+  coreCsScore       Float
+  softSkillsScore   Float
+  strengthsSummary  String         // JSON array string
+  weaknessesSummary String         // JSON array string
+  recommendations   String         // JSON array string
+  completedAt       DateTime       @default(now())
+}
+
+model RoadmapTask {
+  id          String         @id @default(uuid())
+  profileId   String
+  profile     StudentProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  dayNumber   Int
+  weekNumber  Int
+  title       String
+  description String
+  category    String         // QUANTITATIVE, LOGICAL, VERBAL, PROGRAMMING, DSA, CORE_CS, TECHNICAL_INTERVIEW, HR_INTERVIEW, RESUME
+  targetCount Int            @default(5)
+  completed   Boolean        @default(false)
+  completedAt DateTime?
+  dueDate     DateTime?
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  title       String
+  prompt      String
+  category    String   // QUANTITATIVE, LOGICAL, VERBAL, PROGRAMMING, DSA, CORE_CS, TECHNICAL_INTERVIEW, HR_INTERVIEW, COMPANY_SPECIFIC
+  subCategory String
+  difficulty  String   // EASY, MEDIUM, HARD
+  options     String?  // JSON array string
+  correctOpt  Int?     // 0-indexed correct option integer
+  explanation String
+  companyTags String?  // JSON array string e.g. '["TCS", "Amazon"]'
+  isMockTest  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  practiceLogs  PracticeLog[]
+  testQuestions TestQuestion[]
+  bookmarks     Bookmark[]
+}
+
+model CodingProblem {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  difficulty  String   // EASY, MEDIUM, HARD
+  category    String   // Arrays, Strings, Two Pointers, Trees, Dynamic Programming, etc.
+  description String
+  examples    String   // JSON array of {input, output, explanation}
+  constraints String   // JSON array of strings
+  starterCode String   // JSON map { javascript: "...", python: "...", cpp: "...", java: "..." }
+  testCases   String   // JSON array of {input, expectedOutput, isHidden}
+  hints       String   // JSON array of strings
+  editorial   String
+  companyTags String?  // JSON array
+
+  submissions CodingSubmission[]
+}
+
+model CodingSubmission {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId   String
+  problem     CodingProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  code        String
+  language    String
+  status      String        // ACCEPTED, WRONG_ANSWER, TIME_LIMIT_EXCEEDED, RUNTIME_ERROR
+  passedCount Int
+  totalCount  Int
+  runtimeMs   Float
+  memoryKb    Float
+  createdAt   DateTime      @default(now())
+}
+
+model MockTest {
+  id               String         @id @default(uuid())
+  title            String
+  description      String
+  durationMinutes  Int
+  totalQuestions   Int
+  passingMarks     Float
+  negativeMarking  Float          @default(0.25)
+  category         String         // Comprehensive, TCS NQT, Amazon SDE, General Aptitude
+  targetCompany    String?
+  cutoffPercentage Float          @default(70.0)
+  createdAt        DateTime       @default(now())
+
+  questions TestQuestion[]
+  attempts  TestAttempt[]
+}
+
+model TestQuestion {
+  id         String   @id @default(uuid())
+  mockTestId String
+  mockTest   MockTest @relation(fields: [mockTestId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  orderIndex Int
+}
+
+model TestAttempt {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mockTestId    String
+  mockTest      MockTest @relation(fields: [mockTestId], references: [id], onDelete: Cascade)
+  score         Float
+  totalMarks    Float
+  accuracy      Float
+  attempted     Int
+  correct       Int
+  incorrect     Int
+  skipped       Int
+  timeSpentSec  Int
+  sectionScores String   // JSON string of section performance
+  completedAt   DateTime @default(now())
+}
+
+model MockInterview {
+  id            String    @id @default(uuid())
+  studentId     String
+  student       User      @relation("StudentInterviews", fields: [studentId], references: [id], onDelete: Cascade)
+  interviewerId String?
+  interviewer   User?     @relation("MentorInterviews", fields: [interviewerId], references: [id], onDelete: SetNull)
+  type          String    // TECHNICAL, HR, MANAGERIAL, COMPANY_SPECIFIC
+  company       String?
+  targetRole    String
+  scheduledFor  DateTime?
+  status        String    // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  meetingLink   String?
+  transcript    String?   // JSON array of { question, answer, feedback, score }
+  overallRating Float?
+  ratings       String?   // JSON string of { communication, technicalDepth, structure, confidence }
+  strengths     String?   // JSON array string
+  weaknesses    String?   // JSON array string
+  feedback      String?
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+}
+
+model ResumeAnalysis {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName        String
+  rawText         String
+  overallScore    Int
+  categoryScores  String   // JSON string { impact: 85, formatting: 90, keywords: 75, sections: 80 }
+  missingKeywords String   // JSON array string
+  matchedKeywords String   // JSON array string
+  bulletFeedback  String   // JSON array string of { original, improved, issue }
+  generalTips     String   // JSON array string
+  createdAt       DateTime @default(now())
+}
+
+model PracticeLog {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOpt  Int?
+  isCorrect    Boolean
+  timeTakenSec Int
+  createdAt    DateTime @default(now())
+}
+
+model Bookmark {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, questionId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // REMINDER, ACHIEVEMENT, TEST_RESULT, INTERVIEW
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CompanyProfile {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  slug             String   @unique
+  category         String   // IT Services, Product, Tech Giant, FinTech, Consulting
+  description      String
+  logoUrl          String?
+  hiringProcess    String   // JSON array of stages
+  eligibility      String   // JSON string
+  examPattern      String   // JSON string of sections, duration, markings
+  importantTopics  String   // JSON array
+  cutoffDetails    String   // JSON string
+  interviewThemes  String   // JSON array
+  checklist        String   // JSON array of strings
+  salaryRange      String
+  createdAt        DateTime @default(now())
+}
+
+model CompanyNote {
+  id        String   @id @default(uuid())
+  userId    String
+  companyId String
+  content   String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([userId, companyId])
+}
