@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { ProgressRing, ProgressBar } from '../../components/common/ProgressBar';
+import confetti from 'canvas-confetti';
 import {
   Compass,
   CheckCircle2,
@@ -84,6 +85,12 @@ export const Diagnostic: React.FC = () => {
       setExistingResult(res.diagnostic);
       setIsTakingTest(false);
       await refreshUser();
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#0d9488', '#14b8a6', '#10b981'],
+      });
       showToast('Diagnostic completed! Placement readiness recalculated.', 'success');
     } catch (err: any) {
       showToast(err.message || 'Submission failed', 'error');

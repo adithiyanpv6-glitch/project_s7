@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { ProgressBar, ProgressRing } from '../../components/common/ProgressBar';
+import confetti from 'canvas-confetti';
 import {
   FileText,
   Upload,
@@ -73,6 +74,14 @@ export const ResumeAnalyzer: React.FC = () => {
       });
 
       setCurrentAnalysis(res);
+      if (res.overallScore >= 75) {
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#0d9488', '#10b981', '#38bdf8'],
+        });
+      }
       showToast(`Resume Audit Complete! Score: ${res.overallScore}/100`, 'success');
       await refreshUser();
       fetchHistory();
@@ -170,13 +179,23 @@ Software Engineering Intern | TechCorp Solutions (May 2025 - July 2025)
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Resume Plain Text
               </label>
-              <textarea
-                rows={12}
-                value={rawText}
-                onChange={(e) => setRawText(e.target.value)}
-                placeholder="Paste your full resume text here to analyze..."
-                className="w-full p-3 text-xs font-mono bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 leading-relaxed"
-              />
+              <div className="relative overflow-hidden rounded-xl">
+                <textarea
+                  rows={12}
+                  value={rawText}
+                  onChange={(e) => setRawText(e.target.value)}
+                  placeholder="Paste your full resume text here to analyze..."
+                  className="w-full p-3 text-xs font-mono bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 leading-relaxed"
+                />
+                {isAnalyzing && (
+                  <div className="absolute inset-0 bg-brand-500/10 backdrop-blur-[1px] pointer-events-none flex flex-col items-center justify-center">
+                    <div className="w-full h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent shadow-lg shadow-brand-500/50 absolute animate-scan" />
+                    <span className="text-xs font-bold text-brand-700 dark:text-brand-300 bg-white/90 dark:bg-navy-900/90 px-3 py-1 rounded-full shadow-md">
+                      Auditing keywords, action verbs & metrics...
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
             <Button

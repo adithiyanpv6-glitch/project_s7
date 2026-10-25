@@ -6,6 +6,7 @@ import { api } from '../../api/client';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
+import confetti from 'canvas-confetti';
 import {
   GraduationCap,
   Briefcase,
@@ -86,6 +87,12 @@ export const OnboardingWizard: React.FC = () => {
       }
 
       await refreshUser();
+      confetti({
+        particleCount: 100,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ['#0d9488', '#14b8a6', '#0f172a', '#38bdf8', '#10b981'],
+      });
       showToast('Personalized preparation roadmap generated successfully!', 'success');
       navigate('/dashboard');
     } catch (err: any) {
