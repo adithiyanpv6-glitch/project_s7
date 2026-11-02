@@ -7,7 +7,7 @@
 
 <br><br><br>
 
-# DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: DESIGN, DEVELOPMENT AND IMPLEMENTATION OF AI-POWERED APPLICATIONS FOR REAL-WORLD PROBLEM SOLVING
+# DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: AN INSTITUTIONAL RECRUITMENT INTELLIGENCE AND PLACEMENT READINESS PLATFORM (PLACEMENTPREP)
 
 <br>
 
@@ -56,7 +56,7 @@ Department of Computer Science and Engineering
 
 ## **BONAFIDE CERTIFICATE**
 
-This is to certify that the project report entitled **“DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: DESIGN, DEVELOPMENT AND IMPLEMENTATION OF AI-POWERED APPLICATIONS FOR REAL-WORLD PROBLEM SOLVING”** is the bonafide record of project work done by **ADITHIYAN P V (Register No: ____________)** of **B.E. Computer Science and Engineering / Artificial Intelligence and Data Science** during the academic year **2026 – 2027**.
+This is to certify that the project report entitled **“DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: AN INSTITUTIONAL RECRUITMENT INTELLIGENCE AND PLACEMENT READINESS PLATFORM (PLACEMENTPREP)”** is the bonafide record of project work done by **ADITHIYAN P V (Register No: ____________)** of **B.E. Computer Science and Engineering / Artificial Intelligence and Data Science** during the academic year **2026 – 2027**.
 
 <br><br><br><br>
 
@@ -81,7 +81,7 @@ _________________________________ &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ems
 
 # DECLARATION
 
-I affirm that the project work titled **“DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: DESIGN, DEVELOPMENT AND IMPLEMENTATION OF AI-POWERED APPLICATIONS FOR REAL-WORLD PROBLEM SOLVING”** being submitted in partial fulfillment for the award of the degree of **Bachelor of Engineering** in **Computer Science and Engineering / Artificial Intelligence and Data Science** to the **Noorul Islam Centre for Higher Education**, Kumaracoil, is the original work carried out by me under the supervision of **[Guide Name, Designation]**, Department of Computer Science and Engineering.
+I affirm that the project work titled **“DEVELOPMENT OF INTELLIGENT APPLICATIONS USING GENERATIVE AI AND AGENTIC AI: AN INSTITUTIONAL RECRUITMENT INTELLIGENCE AND PLACEMENT READINESS PLATFORM (PLACEMENTPREP)”** being submitted in partial fulfillment for the award of the degree of **Bachelor of Engineering** in **Computer Science and Engineering / Artificial Intelligence and Data Science** to the **Noorul Islam Centre for Higher Education**, Kumaracoil, is the original work carried out by me under the supervision of **[Guide Name, Designation]**, Department of Computer Science and Engineering.
 
 I declare that this report represents my own ideas and work in my own words, and where others' ideas, architectures, algorithms, or words have been included, I have adequately cited and referenced the original sources. I also affirm that this project work has not formed the basis for the award of any other degree, diploma, fellowship, or associate degree in this or any other University or Institution of Higher Learning.
 
