@@ -98,7 +98,7 @@ export const ResumeAnalyzer: React.FC = () => {
 Email: aditya@university.edu | Phone: +91 9876543210 | GitHub: github.com/aditya | LinkedIn: linkedin.com/in/aditya
 
 EDUCATION:
-National Institute of Technology — B.Tech in Computer Science & Engineering (2022 - 2026)
+Noorul Islam Centre for Higher Education (NICHE) — B.Tech in Computer Science & Engineering (2022 - 2026)
 Cumulative GPA: 8.65 / 10.0
 
 TECHNICAL SKILLS:

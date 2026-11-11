@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/common/Button';
-import { Badge } from '../../components/common/Badge';
+import { NICHE_BRAND } from '../../constants/nicheBrand';
 import {
   Compass,
   Calendar,
@@ -17,331 +17,515 @@ import {
   Users,
   ShieldCheck,
   ChevronDown,
+  Monitor,
+  Terminal,
+  Cpu,
+  Layers,
+  Sparkles,
+  ExternalLink,
+  Camera,
+  Play,
+  Award,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, switchRoleDemo } = useAuth();
+  const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeTab, setActiveTab] = useState<'diagnostic' | 'coding' | 'interview' | 'resume'>('diagnostic');
+  const [isLaunching, setIsLaunching] = useState(false);
 
-  const partnerCompanies = [
-    { name: 'Amazon', role: 'Software Engineer', pkg: '₹32 LPA' },
-    { name: 'Microsoft', role: 'SWE-1', pkg: '₹28 LPA' },
-    { name: 'Google', role: 'Associate Engineer', pkg: '₹38 LPA' },
-    { name: 'Zoho', role: 'Product Developer', pkg: '₹12 LPA' },
-    { name: 'TCS Digital', role: 'Systems Engineer', pkg: '₹9 LPA' },
-    { name: 'Infosys', role: 'Specialist Programmer', pkg: '₹9.5 LPA' },
-    { name: 'Cognizant', role: 'GenC Elevate', pkg: '₹7.5 LPA' },
-    { name: 'Deloitte', role: 'Tech Consultant', pkg: '₹11 LPA' },
-  ];
+  const handleLaunchOS = async (role: 'STUDENT' | 'ADMIN' = 'STUDENT') => {
+    setIsLaunching(true);
+    try {
+      if (!user) {
+        await switchRoleDemo(role);
+      }
+      navigate('/dashboard');
+    } catch (e) {
+      navigate('/login');
+    } finally {
+      setIsLaunching(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-slate-200 dark:selection:bg-slate-800">
-      {/* Navigation Header: Quiet, standard height 56px, clean border */}
+      
+      {/* 1. TOP STATUTORY & UNIVERSITY BANNER */}
+      <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 border-b border-slate-800">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-white tracking-wide uppercase">
+              Noorul Islam Centre for Higher Education
+            </span>
+            <span className="text-slate-500 hidden sm:inline">•</span>
+            <span className="text-slate-400 hidden sm:inline">
+              Deemed to be University under Section 3 of UGC Act 1956
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 text-[10px] font-mono">
+            <span className="text-teal-400 font-semibold">NAAC 'A' ACCREDITED</span>
+            <span>•</span>
+            <span className="text-slate-300">AICTE APPROVED</span>
+            <span>•</span>
+            <span className="text-slate-400 hidden md:inline">KUMARACOIL, TAMIL NADU</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. NAVIGATION HEADER: Quiet, standard height 56px, clean border */}
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded bg-slate-900 dark:bg-slate-100 flex items-center justify-center text-white dark:text-slate-900">
-              <GraduationCap className="w-4 h-4" />
-            </div>
+            <img
+              src={NICHE_BRAND.images.logo}
+              alt="NICHE University Logo"
+              className="w-8 h-8 object-contain rounded bg-white p-0.5 border border-slate-200 dark:border-slate-800"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
             <div className="flex items-baseline gap-2">
               <span className="font-semibold text-sm tracking-tight text-slate-900 dark:text-white">
-                PlacementPrep
+                NICHE PlacementOS
               </span>
               <span className="text-xs text-slate-500 hidden sm:inline">
-                Institutional Edition
+                Dept. of CSE
               </span>
             </div>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-xs text-slate-600 dark:text-slate-400 font-medium">
-            <a href="#curriculum" className="hover:text-slate-900 dark:hover:text-white transition-colors">Curriculum</a>
-            <a href="#preview" className="hover:text-slate-900 dark:hover:text-white transition-colors">Platform preview</a>
+            <a href="#os-preview" className="hover:text-slate-900 dark:hover:text-white transition-colors">OS Desktop</a>
+            <a href="#facilities" className="hover:text-slate-900 dark:hover:text-white transition-colors">Campus Labs</a>
             <a href="#recruiters" className="hover:text-slate-900 dark:hover:text-white transition-colors">Recruiters</a>
+            <a href="#accreditation" className="hover:text-slate-900 dark:hover:text-white transition-colors">Accreditations</a>
             <a href="#faq" className="hover:text-slate-900 dark:hover:text-white transition-colors">FAQ</a>
           </nav>
 
           <div className="flex items-center gap-2">
-            {user ? (
-              <Link to="/dashboard">
-                <Button size="sm">
-                  Go to dashboard <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                </Button>
-              </Link>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost" size="sm">
-                    Sign in
-                  </Button>
-                </Link>
-                <Link to="/register">
-                  <Button size="sm">
-                    Get started
-                  </Button>
-                </Link>
-              </>
+            <Button size="sm" onClick={() => handleLaunchOS('STUDENT')} disabled={isLaunching}>
+              <Play className="w-3.5 h-3.5 mr-1 fill-current" />
+              {isLaunching ? 'Booting OS...' : 'Launch PlacementOS'}
+            </Button>
+            {!user && (
+              <Button variant="ghost" size="sm" onClick={() => handleLaunchOS('ADMIN')} title="TPO Admin Demo">
+                TPO Console
+              </Button>
             )}
           </div>
         </div>
       </header>
 
-      {/* Hero Section: Unslop Asymmetric Split Layout */}
-      <section className="pt-16 pb-20 sm:pt-24 sm:pb-28 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      {/* 3. HERO SECTION: Unslop Asymmetric Split with Authentic Campus Backdrop */}
+      <section className="pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            
             {/* Left Column: Specific Copy, no exclamation marks, calm space */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded">
-                <span>Autonomous recruitment intelligence for engineering institutions</span>
+              <div className="inline-flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded border border-slate-200 dark:border-slate-700">
+                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+                <span>Noorul Islam Centre for Higher Education • Institutional Placement OS</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
-                An objective readiness standard for campus placements.
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.14]">
+                An institutional operating system for campus placements.
               </h1>
 
-              <p className="text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-                PlacementPrep replaces disconnected preparation tools with a single institutional platform: dynamic readiness scoring, diagnostic benchmarking, sandboxed DSA practice, and rubric-calibrated mock evaluations.
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+                Engineered specifically for Noorul Islam Centre for Higher Education (NICHE University). Combines continuous Placement Readiness Scoring (PRS), LeetCode-grade algorithmic assessments, real-time ATS resume auditing, and autonomous STAR interview training into a page-wise operating environment.
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-3">
-                <Link to="/register">
-                  <Button size="lg">
-                    Begin student assessment <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="outline" size="lg">
-                    TPO demo login
-                  </Button>
-                </Link>
+                <Button size="lg" onClick={() => handleLaunchOS('STUDENT')} disabled={isLaunching}>
+                  Launch NICHE PlacementOS <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+                <Button variant="outline" size="lg" onClick={() => handleLaunchOS('ADMIN')}>
+                  TPO Admin Console
+                </Button>
               </div>
 
-              {/* Plausible Metrics: Tabular numerals, no hype */}
+              {/* Factual Institutional Metrics: Tabular numerals */}
               <div className="pt-8 border-t border-slate-100 dark:border-slate-800 grid grid-cols-3 gap-6">
                 <div>
-                  <div className="text-2xl font-semibold text-slate-900 dark:text-white num-tabular">16</div>
-                  <div className="text-xs text-slate-500 mt-1">Relational models</div>
+                  <div className="text-2xl font-semibold font-mono text-slate-900 dark:text-white tabular-nums">
+                    {NICHE_BRAND.stats.placementPercentage}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">Placement conversion</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-semibold text-slate-900 dark:text-white num-tabular">0–100</div>
-                  <div className="text-xs text-slate-500 mt-1">Readiness score</div>
+                  <div className="text-2xl font-semibold font-mono text-slate-900 dark:text-white tabular-nums">
+                    {NICHE_BRAND.stats.highestPackage}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">Highest package</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-semibold text-slate-900 dark:text-white num-tabular">&lt; 35 ms</div>
-                  <div className="text-xs text-slate-500 mt-1">Score latency</div>
+                  <div className="text-2xl font-semibold font-mono text-slate-900 dark:text-white tabular-nums">
+                    {NICHE_BRAND.stats.activeRecruiters}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">Active recruiters</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Real Product UI Preview in Code (Not a floating blob or stock art) */}
+            {/* Right Column: Campus Aerial & Institutional Card */}
             <div className="lg:col-span-5">
-              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 shadow-xs">
-                {/* Browser bar */}
-                <div className="flex items-center gap-1.5 pb-3 border-b border-slate-200 dark:border-slate-800">
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <span className="ml-2 text-[11px] font-mono text-slate-400">placementprep.edu/dashboard</span>
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 overflow-hidden shadow-xs">
+                {/* Genuine Campus Facade Photo */}
+                <div className="relative h-56 sm:h-64 overflow-hidden bg-slate-900">
+                  <img
+                    src={NICHE_BRAND.images.campus}
+                    alt="NICHE University Campus at Kumaracoil"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3 text-white text-xs">
+                    <div className="font-semibold">Main Campus Facade & Academic Towers</div>
+                    <div className="text-[11px] text-slate-300">Kumaracoil, Thuckalay • Kanyakumari District</div>
+                  </div>
                 </div>
 
-                {/* Dashboard Card Preview */}
-                <div className="pt-4 space-y-4">
-                  <div className="p-4 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500 font-medium">Placement Readiness Score</span>
-                      <span className="text-[11px] font-medium text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded">
-                        Tier-1 Ready
-                      </span>
-                    </div>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-4xl font-semibold text-slate-900 dark:text-white num-tabular">78.4</span>
-                      <span className="text-xs text-slate-500">/ 100</span>
-                    </div>
-                    <div className="mt-3 w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded overflow-hidden">
-                      <div className="bg-slate-900 dark:bg-white h-full w-[78.4%]" />
-                    </div>
+                {/* Statutory Badges Strip */}
+                <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-3">
+                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                    Institutional Accreditations & Recognitions
                   </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                      <div className="text-[11px] text-slate-500">DSA challenges</div>
-                      <div className="text-lg font-semibold text-slate-900 dark:text-white mt-1 num-tabular">12 / 15</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Accepted submissions</div>
-                    </div>
-                    <div className="p-3 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                      <div className="text-[11px] text-slate-500">ATS resume match</div>
-                      <div className="text-lg font-semibold text-slate-900 dark:text-white mt-1 num-tabular">84%</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">Standard formatting</div>
-                    </div>
-                  </div>
-
-                  <div className="p-3 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span className="text-slate-700 dark:text-slate-300">Diagnostic baseline complete</span>
-                    </div>
-                    <span className="text-[11px] text-slate-400 num-tabular">72/100</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {NICHE_BRAND.approvals.map((appr) => (
+                      <div
+                        key={appr.name}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-200"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
+                        <span className="text-[11px] font-medium">{appr.name}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Curriculum Grid: Varied rhythm, clean lines */}
-      <section id="curriculum" className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-3 mb-12">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Curriculum architecture</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
-            Five computational modules designed for institutional rigor.
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-            Every module feeds into the central Placement Readiness Score formula, providing continuous evaluation across foundational aptitude, algorithmic coding, and interview competencies.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <Compass className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">Diagnostic evaluation</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Standardized baseline testing across Quantitative Aptitude, Operating Systems, Database Management, and Verbal ability.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <Code2 className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">Sandboxed DSA judge</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Node.js VM isolated code execution evaluating algorithmic correctness against hidden edge suites under 2,000ms timeouts.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <Calendar className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">Adaptive 30/60/90-day roadmaps</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Synthesizes daily practice milestones specifically targeted toward individual student deficiency vectors.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <FileText className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">ATS resume intelligence</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Natural language heuristic parser scoring resume section structural integrity, tech keyword density, and action verbs.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <Video className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">STAR mock interviews</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Calibrated technical and HR interview rounds evaluated by mentors using standardized rubric metrics.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
-            <Users className="w-5 h-5 text-slate-700 dark:text-slate-300" />
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">TPO cohort analytics</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Aggregated institutional reporting identifying at-risk students before company recruitment drives commence.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Recruiter Benchmarks Table: Clean tabular presentation */}
-      <section id="recruiters" className="py-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="space-y-2">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Recruitment benchmarks</span>
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
-              Target role criteria and institutional compensation tiers.
+      {/* 4. INTERACTIVE OS DESKTOP PREVIEW SECTION */}
+      <section id="os-preview" className="py-16 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+            <span className="text-xs font-mono font-semibold uppercase text-teal-600 dark:text-teal-400 tracking-wider">
+              Page-wise Operating System
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
+              A unified workstation for students & placement officers.
             </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+              Zero context switching. Every assessment, compiler, diagnostic score, and ATS auditor lives in a dedicated OS window.
+            </p>
           </div>
 
-          <div className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium">
-                <tr>
-                  <th className="p-3">Recruiting organization</th>
-                  <th className="p-3">Target engineering role</th>
-                  <th className="p-3">Typical package</th>
-                  <th className="p-3">Assessment format</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-600 dark:text-slate-400">
-                {partnerCompanies.map((c) => (
-                  <tr key={c.name} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                    <td className="p-3 font-medium text-slate-900 dark:text-slate-200">{c.name}</td>
-                    <td className="p-3">{c.role}</td>
-                    <td className="p-3 font-mono text-slate-800 dark:text-slate-300">{c.pkg}</td>
-                    <td className="p-3">Online assessment + Technical interview</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+          {/* OS Window Frame Mockup */}
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+            {/* System Menubar */}
+            <div className="h-10 px-4 bg-slate-900 text-slate-200 flex items-center justify-between text-xs border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-700" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-700" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-700" />
+                </div>
+                <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
+                  <Monitor className="w-3.5 h-3.5 text-teal-400" />
+                  <span className="font-semibold text-white">NICHE PlacementOS</span>
+                  <span className="text-[10px] text-slate-400 font-mono">v2.4 LTS</span>
+                </div>
+              </div>
 
-      {/* FAQ: Clean, quiet disclosure */}
-      <section id="faq" className="py-20 border-t border-slate-200 dark:border-slate-800 max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="space-y-2 text-center mb-12">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
-            Frequently asked questions
-          </h2>
-          <p className="text-xs text-slate-500">
-            Institutional deployment specifications and system policies
-          </p>
-        </div>
+              {/* Tabs */}
+              <div className="flex items-center gap-1 bg-slate-800/80 p-0.5 rounded text-[11px]">
+                <button
+                  onClick={() => setActiveTab('diagnostic')}
+                  className={`px-2.5 py-1 rounded transition-colors ${activeTab === 'diagnostic' ? 'bg-slate-900 text-white font-medium' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Readiness PRS
+                </button>
+                <button
+                  onClick={() => setActiveTab('coding')}
+                  className={`px-2.5 py-1 rounded transition-colors ${activeTab === 'coding' ? 'bg-slate-900 text-white font-medium' : 'text-slate-400 hover:text-white'}`}
+                >
+                  CodeStudio
+                </button>
+                <button
+                  onClick={() => setActiveTab('resume')}
+                  className={`px-2.5 py-1 rounded transition-colors ${activeTab === 'resume' ? 'bg-slate-900 text-white font-medium' : 'text-slate-400 hover:text-white'}`}
+                >
+                  ATS Auditor
+                </button>
+                <button
+                  onClick={() => setActiveTab('interview')}
+                  className={`px-2.5 py-1 rounded transition-colors ${activeTab === 'interview' ? 'bg-slate-900 text-white font-medium' : 'text-slate-400 hover:text-white'}`}
+                >
+                  Mock Interview
+                </button>
+              </div>
 
-        <div className="divide-y divide-slate-200 dark:divide-slate-800 border-y border-slate-200 dark:border-slate-800">
-          {[
-            {
-              q: 'How is the Placement Readiness Score calculated?',
-              a: 'PRS is calculated via a dynamic weighted formula: 20% Diagnostic baseline, 20% Roadmap completion velocity, 15% Practice accuracy and volume, 15% Accepted DSA coding solutions, 15% Proctored mock tests, 10% ATS resume score, and 5% STAR mock interview evaluation.',
-            },
-            {
-              q: 'Can the platform be self-hosted on collegiate infrastructure?',
-              a: 'Yes. PlacementPrep is architected with Docker and Node.js with a Prisma ORM persistence layer that runs on local PostgreSQL or SQLite servers with zero external API dependencies required for core operations.',
-            },
-            {
-              q: 'Is student code execution safe on multi-tenant servers?',
-              a: 'Yes. Algorithmic submissions execute inside isolated Node.js Virtual Machine contexts with 128MB memory bounds, strict 2,000ms timeouts, and zero access to the host file system or network sockets.',
-            },
-          ].map((item, idx) => (
-            <div key={idx} className="py-4">
-              <button
-                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                className="w-full flex items-center justify-between text-left text-sm font-medium text-slate-900 dark:text-white"
-              >
-                <span>{item.q}</span>
-                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
-              </button>
-              {openFaq === idx && (
-                <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {item.a}
-                </p>
+              <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Online
+              </div>
+            </div>
+
+            {/* Tab Content Display */}
+            <div className="p-6">
+              {activeTab === 'diagnostic' && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <span className="text-[11px] text-slate-500 font-mono">CURRENT PRS</span>
+                    <div className="text-4xl font-semibold font-mono text-teal-600 dark:text-teal-400 tabular-nums">78.5</div>
+                    <div className="text-xs text-emerald-600 font-medium">Eligible for Tier-1 Product Drives</div>
+                  </div>
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <span className="text-[11px] text-slate-500 font-mono">STRONGEST PILLAR</span>
+                    <div className="text-xl font-semibold text-slate-900 dark:text-white">Data Structures (88%)</div>
+                    <div className="text-xs text-slate-500">Solved 42 LeetCode Medium/Hard</div>
+                  </div>
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <span className="text-[11px] text-slate-500 font-mono">TARGET COMPANY</span>
+                    <div className="text-xl font-semibold text-slate-900 dark:text-white">Zoho Corporation</div>
+                    <div className="text-xs text-teal-600 dark:text-teal-400">Match score: 91% • Cutoff cleared</div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'coding' && (
+                <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-300 space-y-2">
+                  <div className="text-slate-500 text-[11px] flex justify-between border-b border-slate-800 pb-2">
+                    <span>Solution.java — Two Sum Optimal O(N) Hash Map</span>
+                    <span className="text-teal-400">Memory: 42.1 MB • Runtime: 1ms</span>
+                  </div>
+                  <pre className="text-teal-300 leading-relaxed overflow-x-auto">
+{`public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) return new int[] { map.get(complement), i };
+        map.put(nums[i], i);
+    }
+    return new int[] {};
+}`}
+                  </pre>
+                  <div className="text-[11px] text-emerald-400 pt-2 border-t border-slate-800">
+                    ✓ 3/3 Test cases passed. Approved by NICHE Code Engine.
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'resume' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <div className="flex justify-between font-semibold">
+                      <span>ATS Structural Score</span>
+                      <span className="font-mono text-teal-600 dark:text-teal-400">84 / 100</span>
+                    </div>
+                    <p className="text-slate-500 text-[11px]">
+                      Validated against NICHE Placement Cell formatting guidelines. No nested graphics or columns.
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <span className="font-semibold">Recommended Keyword Additions</span>
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[11px] font-mono">+ Docker</span>
+                      <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[11px] font-mono">+ CI/CD Pipeline</span>
+                      <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[11px] font-mono">+ Kubernetes</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'interview' && (
+                <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 space-y-3 text-xs">
+                  <div className="font-semibold text-slate-900 dark:text-white">
+                    Track: STAR Behavioral (Amazon Leadership Principles & Zoho Culture)
+                  </div>
+                  <blockquote className="italic text-slate-700 dark:text-slate-300 border-l-2 border-teal-500 pl-3">
+                    "Tell me about a time you optimized a critical database query or resolved a race condition under tight deadlines."
+                  </blockquote>
+                  <div className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                    AI Rubric Ready: Situation (20%), Task (20%), Action (35%), Result (25%).
+                  </div>
+                </div>
               )}
             </div>
-          ))}
+
+            {/* Launch Callout Bar */}
+            <div className="p-3 bg-slate-100 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-slate-500">Ready to enter your institutional workspace?</span>
+              <Button size="sm" onClick={() => handleLaunchOS('STUDENT')}>
+                Enter Full PlacementOS <ChevronDown className="w-3.5 h-3.5 -rotate-90 ml-1" />
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Footer: Quiet hairline, formal copyright */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 bg-white dark:bg-slate-900 text-xs text-slate-500">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-900 dark:text-white">PlacementPrep</span>
-            <span>— Noorul Islam Centre for Higher Education</span>
+      {/* 5. CAMPUS FACILITIES & ADVANCED INFRASTRUCTURE */}
+      <section id="facilities" className="py-16 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div>
+              <span className="text-xs font-mono font-semibold uppercase text-teal-600 dark:text-teal-400 tracking-wider">
+                Institutional Infrastructure
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white mt-1">
+                World-class computing laboratories & campus.
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 max-w-md">
+              Noorul Islam University hosts cutting-edge computing clusters, smart classrooms, and incubation spaces for modern engineering education.
+            </p>
           </div>
-          <div>Academic Year 2026–2027 • All rights reserved</div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+              <div className="h-44 overflow-hidden">
+                <img
+                  src={NICHE_BRAND.images.ictLabs}
+                  alt="NICHE ICT Computing Labs"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-4">
+                <div className="text-xs font-semibold text-slate-900 dark:text-white">Advanced ICT Computing Labs</div>
+                <div className="text-[11px] text-slate-500 mt-1">Dedicated high-throughput computing nodes for algorithmic assessments and research.</div>
+              </div>
+            </div>
+
+            <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+              <div className="h-44 overflow-hidden">
+                <img
+                  src={NICHE_BRAND.images.auditorium}
+                  alt="Hill Top Central Auditorium"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-4">
+                <div className="text-xs font-semibold text-slate-900 dark:text-white">Hill Top Central Auditorium</div>
+                <div className="text-[11px] text-slate-500 mt-1">2,500-seat amphitheatre for university recruitment pre-placement talks and symposiums.</div>
+              </div>
+            </div>
+
+            <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+              <div className="h-44 overflow-hidden">
+                <img
+                  src={NICHE_BRAND.images.incubation}
+                  alt="Innovation & Incubation Centre"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-4">
+                <div className="text-xs font-semibold text-slate-900 dark:text-white">Innovation & Incubation Centre</div>
+                <div className="text-[11px] text-slate-500 mt-1">MSME-recognized hub supporting student patent filings and tech venture development.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. CORPORATE RECRUITER PARTNERS (REAL NIUNIV RECRUITER LOGOS) */}
+      <section id="recruiters" className="py-16 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+            <span className="text-xs font-mono font-semibold uppercase text-teal-600 dark:text-teal-400 tracking-wider">
+              Campus Hiring Partners
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
+              Trusted by 85+ industry leaders.
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+              Top technology corporations actively recruiting from Noorul Islam Centre for Higher Education.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            {NICHE_BRAND.recruiters.map((rec) => (
+              <div
+                key={rec.id}
+                className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg flex flex-col items-center justify-center text-center space-y-2 hover:border-slate-400 dark:hover:border-slate-700 transition-colors"
+              >
+                <div className="h-10 w-full flex items-center justify-center">
+                  <img
+                    src={rec.url}
+                    alt={rec.name}
+                    className="max-h-8 max-w-full object-contain filter dark:brightness-95"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+                <div className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 line-clamp-1">
+                  {rec.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. INSTITUTIONAL ACCREDITATIONS & STATUTORY APPROVALS */}
+      <section id="accreditation" className="py-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+            <div className="space-y-1">
+              <div className="text-xs font-mono font-semibold uppercase text-teal-600 dark:text-teal-400">
+                Statutory Compliance
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                NAAC 'A' Accredited Deemed to be University
+              </h3>
+              <p className="text-xs text-slate-500 max-w-xl">
+                Approved by the Ministry of Human Resource Development (MHRD), AICTE, UGC, and Association of Indian Universities (AIU).
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {NICHE_BRAND.approvals.map((appr) => (
+                <div key={appr.name} className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 shadow-xs">
+                  <Award className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                  <span>{appr.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. FOOTER: Institutional Contact & Copyright */}
+      <footer className="py-10 bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="font-semibold text-white">
+              Noorul Islam Centre for Higher Education (NICHE University)
+            </div>
+            <div className="text-slate-400 text-[11px]">
+              {NICHE_BRAND.location} • Dept. of Computer Science & Engineering
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px]">
+            <a href="https://www.niuniv.com" target="_blank" rel="noopener noreferrer" className="hover:text-white flex items-center gap-1">
+              Official University Website <ExternalLink className="w-3 h-3" />
+            </a>
+            <span>•</span>
+            <span>PlacementOS v2.4 LTS</span>
+          </div>
         </div>
       </footer>
+
     </div>
   );
 };
+
+export default LandingPage;

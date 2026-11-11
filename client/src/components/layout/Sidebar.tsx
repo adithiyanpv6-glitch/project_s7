@@ -96,8 +96,9 @@ export const Sidebar: React.FC = () => {
 
       {/* Bottom Footer Info: Minimal, quiet text */}
       <div className="mt-auto p-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 dark:text-slate-500 leading-normal">
-        <div>NICHE University Placement</div>
-        <div className="text-[10px] text-slate-400">Academic Year 2026–2027</div>
+        <div className="font-semibold text-slate-700 dark:text-slate-300">Noorul Islam University</div>
+        <div className="text-[10px] text-teal-600 dark:text-teal-400">NAAC 'A' Accredited • Dept. of CSE</div>
+        <div className="text-[10px] text-slate-400 mt-0.5">PlacementOS v2.4 LTS</div>
       </div>
     </aside>
   );

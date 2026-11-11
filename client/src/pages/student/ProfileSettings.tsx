@@ -21,7 +21,7 @@ export const ProfileSettings: React.FC = () => {
 
   const profile = user?.studentProfile;
 
-  const [college, setCollege] = useState(profile?.college || 'National Institute of Technology');
+  const [college, setCollege] = useState(profile?.college || 'Noorul Islam Centre for Higher Education (NICHE)');
   const [branch, setBranch] = useState(profile?.branch || 'Computer Science & Engineering');
   const [gradYear, setGradYear] = useState(profile?.gradYear || 2026);
   const [cgpa, setCgpa] = useState(profile?.cgpa || 8.65);

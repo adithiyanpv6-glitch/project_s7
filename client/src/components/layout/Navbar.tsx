@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
+import { NICHE_BRAND } from '../../constants/nicheBrand';
 import { Button } from '../common/Button';
 import {
   Bell,
@@ -10,6 +11,7 @@ import {
   LogOut,
   GraduationCap,
   ChevronDown,
+  Monitor,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -32,18 +34,23 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
   return (
     <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        {/* Brand: Plain text, quiet mark, no gradient wordmark */}
+        {/* Brand: NICHE PlacementOS with official crest */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded bg-slate-900 dark:bg-slate-100 flex items-center justify-center text-white dark:text-slate-900">
-              <GraduationCap className="w-4 h-4" />
-            </div>
+            <img
+              src={NICHE_BRAND.images.logo}
+              alt="NICHE University Logo"
+              className="w-7 h-7 object-contain rounded bg-white p-0.5 border border-slate-200 dark:border-slate-800 shrink-0"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
             <div className="flex items-baseline gap-2">
               <span className="text-sm font-semibold text-slate-900 dark:text-white tracking-tight">
-                PlacementPrep
+                NICHE PlacementOS
               </span>
               <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">
-                Institutional Edition
+                Dept. of CSE
               </span>
             </div>
           </Link>

@@ -74,6 +74,7 @@ export const App: React.FC = () => {
               <Route element={<AppShell darkMode={darkMode} setDarkMode={setDarkMode} />}>
                 {/* Student Endpoints */}
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/os" element={<Dashboard />} />
                 <Route path="/diagnostic" element={<Diagnostic />} />
                 <Route path="/roadmap" element={<Roadmap />} />
                 <Route path="/practice" element={<Practice />} />

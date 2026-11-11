@@ -28,7 +28,7 @@ export const OnboardingWizard: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   // Form states
-  const [college, setCollege] = useState(user?.studentProfile?.college || 'National Institute of Technology');
+  const [college, setCollege] = useState(user?.studentProfile?.college || 'Noorul Islam Centre for Higher Education (NICHE)');
   const [branch, setBranch] = useState(user?.studentProfile?.branch || 'Computer Science & Engineering');
   const [gradYear, setGradYear] = useState(user?.studentProfile?.gradYear || 2026);
   const [cgpa, setCgpa] = useState(user?.studentProfile?.cgpa || 8.5);
