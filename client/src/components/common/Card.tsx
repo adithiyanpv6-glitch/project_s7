@@ -7,8 +7,8 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Card: React.FC<CardProps> = ({ children, className = '', hoverable = false, ...props }) => {
   return (
     <div
-      className={`bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-xl p-5 shadow-sm transition-all ${
-        hoverable ? 'hover:shadow-md hover:border-slate-300 dark:hover:border-navy-700' : ''
+      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-5 transition-colors ${
+        hoverable ? 'hover:border-slate-300 dark:hover:border-slate-700' : ''
       } ${className}`}
       {...props}
     >
@@ -18,19 +18,19 @@ export const Card: React.FC<CardProps> = ({ children, className = '', hoverable 
 };
 
 export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
-  <div className={`mb-4 flex items-center justify-between ${className}`} {...props}>
+  <div className={`mb-3 flex items-center justify-between ${className}`} {...props}>
     {children}
   </div>
 );
 
 export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ children, className = '', ...props }) => (
-  <h3 className={`text-lg font-semibold text-slate-900 dark:text-white ${className}`} {...props}>
+  <h3 className={`text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100 ${className}`} {...props}>
     {children}
   </h3>
 );
 
 export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = ({ children, className = '', ...props }) => (
-  <p className={`text-xs text-slate-500 dark:text-slate-400 mt-0.5 ${className}`} {...props}>
+  <p className={`text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed ${className}`} {...props}>
     {children}
   </p>
 );
