@@ -37,6 +37,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'IBM Plex Mono', 'monospace'],
+        montserrat: ['Montserrat', 'sans-serif'],
       },
       animation: {
         'marquee': 'marquee 25s linear infinite',
