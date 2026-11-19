@@ -10,46 +10,79 @@ export const LandingPage: React.FC = () => {
       className="relative min-h-screen w-full bg-black text-white flex flex-col items-center justify-center overflow-hidden select-none"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* BACKGROUND: 2 Images starting from both sides, slightly tilted, combined & ending at centre, faded 50% with black dominance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {/* BACKGROUND: Zoomed-out campus images starting from outer sides and racing towards the centre like angled perspective rays */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center [perspective:1400px]">
         
-        {/* Left Campus Image - Starts from left side, tilted, ends at centre */}
-        <div className="absolute inset-y-0 left-0 w-1/2 overflow-hidden flex items-center justify-center">
+        {/* Left Campus Ray - Anchored to left edge, zoomed out, racing inwards to centre */}
+        <div
+          className="absolute inset-y-0 left-0 w-[52%] flex items-center justify-center overflow-hidden origin-left"
+          style={{
+            transform: 'rotateY(18deg) rotateZ(-2deg) scale(0.9)',
+            transformStyle: 'preserve-3d',
+          }}
+        >
           <img
             src="/images/niche_campus_left.jpg"
             alt="Noorul Islam Campus Left"
-            className="w-full h-full object-cover transform -rotate-3 scale-110 opacity-50"
+            className="w-full h-auto max-h-[88vh] object-cover rounded-sm opacity-50 transition-opacity duration-500"
             style={{
-              maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
+              maskImage:
+                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
               maskComposite: 'intersect',
               WebkitMaskComposite: 'destination-in',
             }}
           />
+          {/* Subtle light streak along the ray path */}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-white/[0.06] via-transparent to-transparent pointer-events-none"
+            style={{
+              clipPath: 'polygon(0% 15%, 100% 40%, 100% 60%, 0% 85%)',
+            }}
+          />
         </div>
 
-        {/* Right Campus Image - Starts from right side, tilted, ends at centre */}
-        <div className="absolute inset-y-0 right-0 w-1/2 overflow-hidden flex items-center justify-center">
+        {/* Right Campus Ray - Anchored to right edge, zoomed out, racing inwards to centre */}
+        <div
+          className="absolute inset-y-0 right-0 w-[52%] flex items-center justify-center overflow-hidden origin-right"
+          style={{
+            transform: 'rotateY(-18deg) rotateZ(2deg) scale(0.9)',
+            transformStyle: 'preserve-3d',
+          }}
+        >
           <img
             src="/images/niche_campus_right.jpg"
             alt="Noorul Islam Campus Right"
-            className="w-full h-full object-cover transform rotate-3 scale-110 opacity-50"
+            className="w-full h-auto max-h-[88vh] object-cover rounded-sm opacity-50 transition-opacity duration-500"
             style={{
-              maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 15%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
+              maskImage:
+                'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
               maskComposite: 'intersect',
               WebkitMaskComposite: 'destination-in',
             }}
           />
+          {/* Subtle light streak along the ray path */}
+          <div
+            className="absolute inset-0 bg-gradient-to-l from-white/[0.06] via-transparent to-transparent pointer-events-none"
+            style={{
+              clipPath: 'polygon(100% 15%, 0% 40%, 0% 60%, 100% 85%)',
+            }}
+          />
         </div>
 
-        {/* Dominant Black Vignette & Center Convergence Shield */}
-        <div className="absolute inset-0 bg-black/35 pointer-events-none" />
+        {/* Center Convergence Seam - Where both rays meet and join */}
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-32 bg-gradient-to-r from-transparent via-black/40 to-transparent pointer-events-none" />
+
+        {/* Deep Black Overwhelming Dominance */}
+        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-3xl bg-radial from-black/90 via-black/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-3xl bg-radial from-black/95 via-black/60 to-transparent pointer-events-none" />
       </div>
 
-      {/* FOREGROUND CONTENT: Pure Iconic Classic Centerpiece */}
+      {/* FOREGROUND CONTENT: Exact Montserrat Typography, Alignments, and Sign In */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl mx-auto space-y-4 sm:space-y-6">
         
         {/* Title in one uniform size across all words */}
