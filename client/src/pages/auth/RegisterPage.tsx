@@ -44,106 +44,55 @@ export const RegisterPage: React.FC = () => {
       className="relative min-h-screen w-full bg-black text-white flex flex-col justify-between items-center py-6 sm:py-10 px-4 overflow-hidden select-none"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* 1. BACKGROUND GLOW & TECH CIRCUIT TRACES */}
+      {/* 1. TOP LEFT CORNER: BACK BUTTON */}
+      <Link
+        to="/login"
+        className="absolute top-4 left-4 sm:top-6 sm:left-8 z-20 text-zinc-500 hover:text-white transition-colors text-xs tracking-widest flex items-center gap-1.5 uppercase font-light"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> Sign In
+      </Link>
+
+      {/* 2. BACKGROUND: Lighting Ambient Glow & Faded NICHE Centered with Box */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Top-center emerald/cyan ambient aura */}
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[85vw] max-w-4xl h-[45vh] pointer-events-none"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl h-[55vh] pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 65% 55% at 50% 0%, rgba(13, 148, 136, 0.22) 0%, rgba(5, 70, 65, 0.12) 45%, rgba(0, 0, 0, 0) 80%)',
+              'radial-gradient(ellipse 70% 50% at 50% 15%, rgba(200, 220, 215, 0.10) 0%, rgba(13, 148, 136, 0.12) 30%, rgba(10, 45, 45, 0.06) 60%, rgba(0, 0, 0, 0) 85%)',
           }}
         />
 
-        {/* Left Tech Circuit Trace Lines with Glow */}
-        <svg
-          className="absolute top-12 left-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
-          viewBox="0 0 320 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M 0 40 L 140 40 L 190 90 L 260 90"
-            stroke="url(#regLeftTraceGrad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <circle cx="260" cy="90" r="3.5" fill="#2dd4bf" />
-          <circle cx="260" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
-          <path
-            d="M 0 130 L 90 130 L 120 160 L 180 160"
-            stroke="rgba(255,255,255,0.2)"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <circle cx="180" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
-          <defs>
-            <linearGradient id="regLeftTraceGrad" x1="0" y1="40" x2="260" y2="90" gradientUnits="userSpaceOnUse">
-              <stop stopColor="rgba(255,255,255,0.6)" />
-              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
-              <stop offset="1" stopColor="rgba(45,212,191,1)" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Right Tech Circuit Trace Lines with Glow */}
-        <svg
-          className="absolute top-12 right-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
-          viewBox="0 0 320 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M 320 40 L 180 40 L 130 90 L 60 90"
-            stroke="url(#regRightTraceGrad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <circle cx="60" cy="90" r="3.5" fill="#2dd4bf" />
-          <circle cx="60" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
-          <path
-            d="M 320 130 L 230 130 L 200 160 L 140 160"
-            stroke="rgba(255,255,255,0.2)"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <circle cx="140" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
-          <defs>
-            <linearGradient id="regRightTraceGrad" x1="320" y1="40" x2="60" y2="90" gradientUnits="userSpaceOnUse">
-              <stop stopColor="rgba(255,255,255,0.6)" />
-              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
-              <stop offset="1" stopColor="rgba(45,212,191,1)" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Giant Watermark Text: NICHE on one single line, faded softly */}
-        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none px-4">
-          <span className="font-extrabold text-[10vw] sm:text-[12vw] tracking-[0.18em] sm:tracking-[0.22em] uppercase leading-none opacity-[0.08] sm:opacity-[0.10] whitespace-nowrap text-zinc-300">
+        {/* Faded NICHE Watermark Centered Directly with the Box */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4">
+          <span className="font-extrabold text-[12vw] sm:text-[13vw] tracking-[0.2em] uppercase leading-none opacity-[0.07] whitespace-nowrap text-zinc-300">
             N I C H E
           </span>
         </div>
+
+        {/* Subtle Bottom Ambient Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
       </div>
 
-      {/* 2. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT */}
-      <header className="relative z-10 w-full flex items-center justify-between max-w-6xl px-4 pt-1 sm:pt-2">
-        <Link
-          to="/login"
-          className="text-zinc-500 hover:text-white transition-colors text-xs tracking-widest flex items-center gap-1.5 uppercase font-light"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" /> Sign In
-        </Link>
-
-        <h2 className="text-xs sm:text-sm md:text-base font-light tracking-[0.22em] sm:tracking-[0.3em] text-zinc-200 uppercase text-center flex-1 px-2">
+      {/* 3. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT */}
+      <header className="relative z-10 w-full text-center max-w-4xl px-4 pt-3 sm:pt-4">
+        <h2 className="text-xs sm:text-sm md:text-base font-light tracking-[0.22em] sm:tracking-[0.3em] text-zinc-200 uppercase">
           NOORUL ISLAM CENTRE FOR HIGHER EDUCATION
         </h2>
-
-        <div className="w-12 hidden sm:block" />
       </header>
 
-      {/* 3. CENTRE: GLASSMORPHISM REGISTER BOX */}
+      {/* 4. CENTRE: GLASSMORPHISM REGISTER BOX */}
       <div className="relative z-10 w-full max-w-md my-auto px-2 py-4">
-        <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(13,148,136,0.08)] p-6 sm:p-8 space-y-5">
+        <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(13,148,136,0.08)] p-6 sm:p-8 space-y-5 overflow-hidden">
+          
+          {/* Faded NICHE Watermark inside Centre of Box */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
+            <span className="font-extrabold text-7xl sm:text-8xl tracking-[0.25em] uppercase leading-none opacity-[0.05] text-zinc-300 whitespace-nowrap">
+              NICHE
+            </span>
+          </div>
+
+          <div className="relative z-10 space-y-5">
           
           {/* 3 Role Options in Exact Order: Student, Mentor, Admin */}
           <div className="space-y-2">
@@ -270,6 +219,7 @@ export const RegisterPage: React.FC = () => {
             </Link>
           </div>
 
+          </div>
         </div>
       </div>
 

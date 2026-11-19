@@ -78,21 +78,29 @@ export const LoginPage: React.FC = () => {
       className="relative min-h-screen w-full bg-black text-white flex flex-col justify-between items-center py-6 sm:py-10 px-4 overflow-hidden select-none"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* 1. BACKGROUND: Lighting Gray/Teal Halo with N I C H E Watermark (Matching Reference Image) */}
+      {/* 1. TOP LEFT CORNER: BACK BUTTON */}
+      <Link
+        to="/"
+        className="absolute top-4 left-4 sm:top-6 sm:left-8 z-20 text-zinc-500 hover:text-white transition-colors text-xs tracking-widest flex items-center gap-1.5 uppercase font-light"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> Back
+      </Link>
+
+      {/* 2. BACKGROUND: Lighting Ambient Glow & Faded NICHE Centered with Login Box */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         
-        {/* Soft, Diffuse Lighting Gray/Teal Ambient Background Glow (from reference image) */}
+        {/* Soft, Diffuse Ambient Halo */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl h-[55vh] pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 70% 50% at 50% 12%, rgba(200, 220, 215, 0.12) 0%, rgba(13, 148, 136, 0.15) 30%, rgba(10, 45, 45, 0.08) 60%, rgba(0, 0, 0, 0) 85%)',
+              'radial-gradient(ellipse 70% 50% at 50% 15%, rgba(200, 220, 215, 0.10) 0%, rgba(13, 148, 136, 0.12) 30%, rgba(10, 45, 45, 0.06) 60%, rgba(0, 0, 0, 0) 85%)',
           }}
         />
 
-        {/* Center Illuminated Area: NICHE on one single line, faded softly */}
-        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none px-4">
-          <span className="font-extrabold text-[10vw] sm:text-[12vw] tracking-[0.18em] sm:tracking-[0.22em] uppercase leading-none opacity-[0.08] sm:opacity-[0.10] whitespace-nowrap text-zinc-300">
+        {/* Faded NICHE Watermark Centered Directly with the Login Box */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4">
+          <span className="font-extrabold text-[12vw] sm:text-[13vw] tracking-[0.2em] uppercase leading-none opacity-[0.07] whitespace-nowrap text-zinc-300">
             N I C H E
           </span>
         </div>
@@ -101,20 +109,11 @@ export const LoginPage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
       </div>
 
-      {/* 2. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT (UNCHANGED) */}
-      <header className="relative z-10 w-full flex items-center justify-between max-w-6xl px-4 pt-1 sm:pt-2">
-        <Link
-          to="/"
-          className="text-zinc-500 hover:text-white transition-colors text-xs tracking-widest flex items-center gap-1.5 uppercase font-light"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" /> Back
-        </Link>
-
-        <h2 className="text-xs sm:text-sm md:text-base font-light tracking-[0.22em] sm:tracking-[0.3em] text-zinc-200 uppercase text-center flex-1 px-2">
+      {/* 3. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT */}
+      <header className="relative z-10 w-full text-center max-w-4xl px-4 pt-3 sm:pt-4">
+        <h2 className="text-xs sm:text-sm md:text-base font-light tracking-[0.22em] sm:tracking-[0.3em] text-zinc-200 uppercase">
           NOORUL ISLAM CENTRE FOR HIGHER EDUCATION
         </h2>
-
-        <div className="w-12 hidden sm:block" />
       </header>
 
       {/* 3. CENTRE: GLASSMORPHISM BOX */}
@@ -122,10 +121,17 @@ export const LoginPage: React.FC = () => {
         
         {/* STEP 1: FIRST PAGE — ONLY STUDENT, MENTOR, ADMIN OPTIONS (IN THIS ORDER) */}
         {step === 'roles' && (
-          <div className="relative rounded-3xl bg-zinc-950/65 backdrop-blur-2xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-6">
+          <div className="relative rounded-3xl bg-zinc-950/65 backdrop-blur-2xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-6 overflow-hidden">
             
+            {/* Faded NICHE Watermark inside Centre of Login Box */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
+              <span className="font-extrabold text-7xl sm:text-8xl tracking-[0.25em] uppercase leading-none opacity-[0.05] text-zinc-300 whitespace-nowrap">
+                NICHE
+              </span>
+            </div>
+
             {/* Header Caption */}
-            <div className="text-center space-y-1.5 pb-2">
+            <div className="relative z-10 text-center space-y-1.5 pb-2">
               <span className="text-[10px] sm:text-[11px] font-light tracking-[0.25em] uppercase text-zinc-400">
                 Institutional Access
               </span>
@@ -216,19 +222,27 @@ export const LoginPage: React.FC = () => {
 
         {/* STEP 2: NEXT PAGE — CREDENTIAL / EMAIL ENTERING OPTION FOR THE CHOSEN ROLE */}
         {step === 'credentials' && (
-          <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-5">
+          <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-5 overflow-hidden">
             
-            {/* Back Button to Return to Role Selection */}
-            <button
-              type="button"
-              onClick={() => {
-                setStep('roles');
-                setError(null);
-              }}
-              className="text-zinc-400 hover:text-white transition-colors text-xs tracking-wider flex items-center gap-1.5 uppercase font-light"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to Role Selection
-            </button>
+            {/* Faded NICHE Watermark inside Centre of Login Box */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
+              <span className="font-extrabold text-7xl sm:text-8xl tracking-[0.25em] uppercase leading-none opacity-[0.05] text-zinc-300 whitespace-nowrap">
+                NICHE
+              </span>
+            </div>
+
+            <div className="relative z-10 space-y-5">
+              {/* Back Button to Return to Role Selection */}
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('roles');
+                  setError(null);
+                }}
+                className="text-zinc-400 hover:text-white transition-colors text-xs tracking-wider flex items-center gap-1.5 uppercase font-light cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Role Selection
+              </button>
 
             {/* Context Header */}
             <div className="text-center space-y-1">
@@ -310,6 +324,7 @@ export const LoginPage: React.FC = () => {
               </Link>
             </div>
 
+            </div>
           </div>
         )}
 
