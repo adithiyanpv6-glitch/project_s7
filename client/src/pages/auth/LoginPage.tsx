@@ -100,7 +100,7 @@ export const LoginPage: React.FC = () => {
 
         {/* Faded NICHE Watermark Centered Directly with the Login Box */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none px-4">
-          <span className="font-extrabold text-[12vw] sm:text-[13vw] tracking-[0.2em] uppercase leading-none opacity-[0.07] whitespace-nowrap text-zinc-300">
+          <span className="font-extrabold text-[12vw] sm:text-[14vw] tracking-[0.22em] uppercase leading-none opacity-[0.10] whitespace-nowrap text-zinc-300">
             N I C H E
           </span>
         </div>
@@ -121,15 +121,7 @@ export const LoginPage: React.FC = () => {
         
         {/* STEP 1: FIRST PAGE — ONLY STUDENT, MENTOR, ADMIN OPTIONS (IN THIS ORDER) */}
         {step === 'roles' && (
-          <div className="relative rounded-3xl bg-zinc-950/65 backdrop-blur-2xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-6 overflow-hidden">
-            
-            {/* Faded NICHE Watermark inside Centre of Login Box */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-              <span className="font-extrabold text-7xl sm:text-8xl tracking-[0.25em] uppercase leading-none opacity-[0.05] text-zinc-300 whitespace-nowrap">
-                NICHE
-              </span>
-            </div>
-
+          <div className="relative rounded-3xl bg-zinc-950/45 backdrop-blur-xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-6 overflow-hidden">
             {/* Header Caption */}
             <div className="relative z-10 text-center space-y-1.5 pb-2">
               <span className="text-[10px] sm:text-[11px] font-light tracking-[0.25em] uppercase text-zinc-400">
@@ -222,15 +214,7 @@ export const LoginPage: React.FC = () => {
 
         {/* STEP 2: NEXT PAGE — CREDENTIAL / EMAIL ENTERING OPTION FOR THE CHOSEN ROLE */}
         {step === 'credentials' && (
-          <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-5 overflow-hidden">
-            
-            {/* Faded NICHE Watermark inside Centre of Login Box */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-              <span className="font-extrabold text-7xl sm:text-8xl tracking-[0.25em] uppercase leading-none opacity-[0.05] text-zinc-300 whitespace-nowrap">
-                NICHE
-              </span>
-            </div>
-
+          <div className="relative rounded-3xl bg-zinc-950/45 backdrop-blur-xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-5 overflow-hidden">
             <div className="relative z-10 space-y-5">
               {/* Back Button to Return to Role Selection */}
               <button
