@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api/client';
-import { ArrowLeft, Check, Lock, Mail, UserCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, GraduationCap, ShieldCheck, Users, UserCheck } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
+  // Step: 'roles' (first page with ONLY Student, Mentor, Admin) | 'credentials' (next page with email entering)
+  const [step, setStep] = useState<'roles' | 'credentials'>('roles');
   const [role, setRole] = useState<'STUDENT' | 'INTERVIEWER' | 'ADMIN'>('STUDENT');
   const [email, setEmail] = useState('student@placementprep.com');
   const [password, setPassword] = useState('Student@123');
@@ -13,7 +15,7 @@ export const LoginPage: React.FC = () => {
   const { login, switchRoleDemo } = useAuth();
   const navigate = useNavigate();
 
-  const handleRoleChange = (selectedRole: 'STUDENT' | 'INTERVIEWER' | 'ADMIN') => {
+  const handleSelectRole = (selectedRole: 'STUDENT' | 'INTERVIEWER' | 'ADMIN') => {
     setRole(selectedRole);
     setError(null);
     if (selectedRole === 'STUDENT') {
@@ -26,6 +28,8 @@ export const LoginPage: React.FC = () => {
       setEmail('admin@placementprep.com');
       setPassword('Admin@123');
     }
+    // Advance to credentials entry on next page
+    setStep('credentials');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,88 +78,36 @@ export const LoginPage: React.FC = () => {
       className="relative min-h-screen w-full bg-black text-white flex flex-col justify-between items-center py-6 sm:py-10 px-4 overflow-hidden select-none"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* 1. BACKGROUND GLOW & TECH CIRCUIT TRACES */}
+      {/* 1. BACKGROUND: Lighting Gray/Teal Halo with N I C H E Watermark (Matching Reference Image) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Top-center emerald/cyan ambient aura */}
+        
+        {/* Soft, Diffuse Lighting Gray/Teal Ambient Background Glow (from reference image) */}
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[85vw] max-w-4xl h-[45vh] pointer-events-none"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl h-[55vh] pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 65% 55% at 50% 0%, rgba(13, 148, 136, 0.22) 0%, rgba(5, 70, 65, 0.12) 45%, rgba(0, 0, 0, 0) 80%)',
+              'radial-gradient(ellipse 70% 50% at 50% 12%, rgba(200, 220, 215, 0.12) 0%, rgba(13, 148, 136, 0.15) 30%, rgba(10, 45, 45, 0.08) 60%, rgba(0, 0, 0, 0) 85%)',
           }}
         />
 
-        {/* Left Tech Circuit Trace Lines with Glow */}
-        <svg
-          className="absolute top-12 left-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
-          viewBox="0 0 320 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M 0 40 L 140 40 L 190 90 L 260 90"
-            stroke="url(#leftTraceGrad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <circle cx="260" cy="90" r="3.5" fill="#2dd4bf" />
-          <circle cx="260" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
-          <path
-            d="M 0 130 L 90 130 L 120 160 L 180 160"
-            stroke="rgba(255,255,255,0.2)"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <circle cx="180" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
-          <defs>
-            <linearGradient id="leftTraceGrad" x1="0" y1="40" x2="260" y2="90" gradientUnits="userSpaceOnUse">
-              <stop stopColor="rgba(255,255,255,0.6)" />
-              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
-              <stop offset="1" stopColor="rgba(45,212,191,1)" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Right Tech Circuit Trace Lines with Glow */}
-        <svg
-          className="absolute top-12 right-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
-          viewBox="0 0 320 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M 320 40 L 180 40 L 130 90 L 60 90"
-            stroke="url(#rightTraceGrad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <circle cx="60" cy="90" r="3.5" fill="#2dd4bf" />
-          <circle cx="60" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
-          <path
-            d="M 320 130 L 230 130 L 200 160 L 140 160"
-            stroke="rgba(255,255,255,0.2)"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <circle cx="140" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
-          <defs>
-            <linearGradient id="rightTraceGrad" x1="320" y1="40" x2="60" y2="90" gradientUnits="userSpaceOnUse">
-              <stop stopColor="rgba(255,255,255,0.6)" />
-              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
-              <stop offset="1" stopColor="rgba(45,212,191,1)" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Giant Watermark Text: N I C H E (Replaces the CONTACT text from reference image) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span className="font-extrabold text-[15vw] sm:text-[17vw] tracking-[0.25em] text-white/[0.045] uppercase leading-none transform -translate-y-12">
+        {/* Center Illuminated Area: N I C H E written like CONTACT in the reference image */}
+        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none">
+          <span
+            className="font-extrabold text-[15vw] sm:text-[16vw] tracking-[0.22em] uppercase leading-none opacity-20 sm:opacity-25"
+            style={{
+              color: '#a1a1aa',
+              textShadow: '0 0 60px rgba(255,255,255,0.08), 0 0 100px rgba(13,148,136,0.12)',
+            }}
+          >
             N I C H E
           </span>
         </div>
+
+        {/* Subtle Bottom Ambient Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
       </div>
 
-      {/* 2. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT */}
+      {/* 2. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT (UNCHANGED) */}
       <header className="relative z-10 w-full flex items-center justify-between max-w-6xl px-4 pt-1 sm:pt-2">
         <Link
           to="/"
@@ -171,79 +123,141 @@ export const LoginPage: React.FC = () => {
         <div className="w-12 hidden sm:block" />
       </header>
 
-      {/* 3. CENTRE: GLASSMORPHISM SIGN IN BOX */}
-      <div className="relative z-10 w-full max-w-md my-auto px-2 py-4">
-        <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(13,148,136,0.08)] p-6 sm:p-8 space-y-6">
-          
-          {/* 3 Role Options in Exact Order: Student, Mentor, Admin */}
-          <div className="space-y-2">
-            <span className="text-[10px] tracking-[0.2em] uppercase text-zinc-400 font-light block text-center">
-              Select Institutional Portal
-            </span>
-            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800/80">
-              <button
-                type="button"
-                onClick={() => handleRoleChange('STUDENT')}
-                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
-                  role === 'STUDENT'
-                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                }`}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRoleChange('INTERVIEWER')}
-                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
-                  role === 'INTERVIEWER'
-                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                }`}
-              >
-                Mentor
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRoleChange('ADMIN')}
-                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
-                  role === 'ADMIN'
-                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                }`}
-              >
-                Admin
-              </button>
+      {/* 3. CENTRE: GLASSMORPHISM BOX */}
+      <div className="relative z-10 w-full max-w-lg my-auto px-2 py-4">
+        
+        {/* STEP 1: FIRST PAGE — ONLY STUDENT, MENTOR, ADMIN OPTIONS (IN THIS ORDER) */}
+        {step === 'roles' && (
+          <div className="relative rounded-3xl bg-zinc-950/65 backdrop-blur-2xl border border-zinc-800/80 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-6">
+            
+            {/* Header Caption */}
+            <div className="text-center space-y-1.5 pb-2">
+              <span className="text-[10px] sm:text-[11px] font-light tracking-[0.25em] uppercase text-zinc-400">
+                Institutional Access
+              </span>
+              <h3 className="text-xl sm:text-2xl font-light tracking-wide text-white uppercase">
+                Select Your Portal
+              </h3>
             </div>
-          </div>
 
-          {/* Form Context Caption */}
-          <div className="text-center space-y-1">
-            <h3 className="text-lg font-light tracking-wide text-white uppercase">
-              {role === 'STUDENT' ? 'Student Sign In' : role === 'INTERVIEWER' ? 'Mentor Sign In' : 'TPO Admin Sign In'}
-            </h3>
-            <p className="text-[11px] text-zinc-400 font-light tracking-wider">
-              {role === 'STUDENT'
-                ? 'Department of Computer Science & Engineering'
-                : role === 'INTERVIEWER'
-                ? 'Technical Interview & Evaluation Panel'
-                : 'Placement & Training Administration'}
-            </p>
-          </div>
+            {/* 3 Options Only: Student, Mentor, Admin (In Exact Order) */}
+            <div className="space-y-3 font-montserrat">
+              
+              {/* Option 1: Student */}
+              <button
+                type="button"
+                onClick={() => handleSelectRole('STUDENT')}
+                className="group w-full p-4 rounded-2xl bg-zinc-900/60 hover:bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-500/80 transition-all duration-300 flex items-center justify-between text-left cursor-pointer shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-teal-400 group-hover:bg-white group-hover:text-black transition-colors shrink-0">
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium tracking-wider text-white uppercase group-hover:text-teal-300 transition-colors">
+                      Student
+                    </div>
+                    <div className="text-[11px] text-zinc-400 font-light tracking-wide mt-0.5">
+                      B.Tech / M.Tech Placement Cohort 2026
+                    </div>
+                  </div>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-zinc-800/60 group-hover:bg-white group-hover:text-black flex items-center justify-center text-zinc-400 transition-all shrink-0">
+                  <ArrowRight className="w-4 h-4" />
+                </div>
+              </button>
 
-          {error && (
-            <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs text-center font-light tracking-wide">
-              {error}
+              {/* Option 2: Mentor */}
+              <button
+                type="button"
+                onClick={() => handleSelectRole('INTERVIEWER')}
+                className="group w-full p-4 rounded-2xl bg-zinc-900/60 hover:bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-500/80 transition-all duration-300 flex items-center justify-between text-left cursor-pointer shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-teal-400 group-hover:bg-white group-hover:text-black transition-colors shrink-0">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium tracking-wider text-white uppercase group-hover:text-teal-300 transition-colors">
+                      Mentor
+                    </div>
+                    <div className="text-[11px] text-zinc-400 font-light tracking-wide mt-0.5">
+                      Technical Interview & Evaluation Panel
+                    </div>
+                  </div>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-zinc-800/60 group-hover:bg-white group-hover:text-black flex items-center justify-center text-zinc-400 transition-all shrink-0">
+                  <ArrowRight className="w-4 h-4" />
+                </div>
+              </button>
+
+              {/* Option 3: Admin */}
+              <button
+                type="button"
+                onClick={() => handleSelectRole('ADMIN')}
+                className="group w-full p-4 rounded-2xl bg-zinc-900/60 hover:bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-500/80 transition-all duration-300 flex items-center justify-between text-left cursor-pointer shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-teal-400 group-hover:bg-white group-hover:text-black transition-colors shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium tracking-wider text-white uppercase group-hover:text-teal-300 transition-colors">
+                      Admin
+                    </div>
+                    <div className="text-[11px] text-zinc-400 font-light tracking-wide mt-0.5">
+                      Training & Placement Officer (TPO Console)
+                    </div>
+                  </div>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-zinc-800/60 group-hover:bg-white group-hover:text-black flex items-center justify-center text-zinc-400 transition-all shrink-0">
+                  <ArrowRight className="w-4 h-4" />
+                </div>
+              </button>
+
             </div>
-          )}
 
-          {/* Sign In Form: Glass Inputs matching reference style */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
-                Institutional Email / ID
-              </label>
-              <div className="relative">
+          </div>
+        )}
+
+        {/* STEP 2: NEXT PAGE — CREDENTIAL / EMAIL ENTERING OPTION FOR THE CHOSEN ROLE */}
+        {step === 'credentials' && (
+          <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(255,255,255,0.03)] p-6 sm:p-8 space-y-5">
+            
+            {/* Back Button to Return to Role Selection */}
+            <button
+              type="button"
+              onClick={() => {
+                setStep('roles');
+                setError(null);
+              }}
+              className="text-zinc-400 hover:text-white transition-colors text-xs tracking-wider flex items-center gap-1.5 uppercase font-light"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to Role Selection
+            </button>
+
+            {/* Context Header */}
+            <div className="text-center space-y-1">
+              <span className="text-[10px] tracking-[0.25em] uppercase text-teal-400 font-light">
+                {role === 'STUDENT' ? 'Student Portal' : role === 'INTERVIEWER' ? 'Mentor Portal' : 'Admin Portal'}
+              </span>
+              <h3 className="text-xl font-light tracking-wide text-white uppercase">
+                {role === 'STUDENT' ? 'Student Sign In' : role === 'INTERVIEWER' ? 'Mentor Sign In' : 'TPO Admin Sign In'}
+              </h3>
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs text-center font-light tracking-wide">
+                {error}
+              </div>
+            )}
+
+            {/* Email & Password Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
+                  Institutional Email / ID
+                </label>
                 <input
                   type="email"
                   required
@@ -253,13 +267,11 @@ export const LoginPage: React.FC = () => {
                   className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-zinc-500 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
                 />
               </div>
-            </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
-                Password
-              </label>
-              <div className="relative">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
+                  Password
+                </label>
                 <input
                   type="password"
                   required
@@ -269,46 +281,47 @@ export const LoginPage: React.FC = () => {
                   className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-zinc-500 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
                 />
               </div>
+
+              {/* Submit Pill Button */}
+              <div className="pt-2 space-y-2.5">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-white hover:bg-zinc-200 text-black font-semibold tracking-[0.15em] text-xs uppercase py-3.5 rounded-xl transition-all duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isLoading ? 'Verifying...' : 'Submit'}
+                </button>
+
+                {/* 1-Click Instant Demo Launch Option */}
+                <button
+                  type="button"
+                  onClick={handleOneClickDemo}
+                  disabled={isLoading}
+                  className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 font-light tracking-[0.15em] text-[11px] uppercase py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <UserCheck className="w-3.5 h-3.5 text-teal-400" />
+                  Quick Launch {role === 'STUDENT' ? 'Student' : role === 'INTERVIEWER' ? 'Mentor' : 'Admin'} Demo
+                </button>
+              </div>
+            </form>
+
+            {/* Registration Link */}
+            <div className="text-center pt-2 border-t border-zinc-900 text-xs">
+              <span className="text-zinc-400 font-light">New candidate? </span>
+              <Link
+                to="/register"
+                className="text-zinc-200 hover:text-white underline underline-offset-4 tracking-wider uppercase text-[11px]"
+              >
+                Register Account
+              </Link>
             </div>
 
-            {/* Submit Button: Solid White Pill like the reference Submit button */}
-            <div className="pt-2 space-y-2.5">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-white hover:bg-zinc-200 text-black font-semibold tracking-[0.15em] text-xs uppercase py-3.5 rounded-xl transition-all duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {isLoading ? 'Verifying...' : 'Submit'}
-              </button>
-
-              {/* 1-Click Instant Demo Login Option */}
-              <button
-                type="button"
-                onClick={handleOneClickDemo}
-                disabled={isLoading}
-                className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 font-light tracking-[0.15em] text-[11px] uppercase py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <UserCheck className="w-3.5 h-3.5 text-teal-400" />
-                Quick Launch {role === 'STUDENT' ? 'Student' : role === 'INTERVIEWER' ? 'Mentor' : 'Admin'} Demo
-              </button>
-            </div>
-          </form>
-
-          {/* Registration Link */}
-          <div className="text-center pt-2 border-t border-zinc-900 text-xs">
-            <span className="text-zinc-400 font-light">New to the platform? </span>
-            <Link
-              to="/register"
-              className="text-zinc-200 hover:text-white underline underline-offset-4 tracking-wider uppercase text-[11px]"
-            >
-              Register Candidate
-            </Link>
           </div>
+        )}
 
-        </div>
       </div>
 
-      {/* 4. CENTRE AT BOTTOM: NAME OF THE WEBSITE IN MONTSERRAT */}
+      {/* 4. CENTRE AT BOTTOM: NAME OF THE WEBSITE IN MONTSERRAT (UNCHANGED) */}
       <footer className="relative z-10 w-full text-center pb-2 pt-4">
         <p className="text-[10px] sm:text-xs md:text-sm font-light tracking-[0.35em] sm:tracking-[0.45em] text-zinc-500 uppercase">
           PLACEMENT READINESS PLATFORM OF NICHE
