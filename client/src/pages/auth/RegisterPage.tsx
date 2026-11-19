@@ -52,6 +52,15 @@ export const RegisterPage: React.FC = () => {
         <ArrowLeft className="w-3.5 h-3.5" /> Sign In
       </Link>
 
+      {/* TOP RIGHT CORNER: NICHE LOGO */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center">
+        <img
+          src="/images/niche_logo.png"
+          alt="NICHE Logo"
+          className="h-7 sm:h-8 md:h-9 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] filter brightness-95 hover:brightness-100 transition-all duration-300"
+        />
+      </div>
+
       {/* 2. BACKGROUND: Lighting Ambient Glow & Faded NICHE Centered with Box */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Top-center emerald/cyan ambient aura */}
