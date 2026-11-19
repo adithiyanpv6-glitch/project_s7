@@ -1,104 +1,220 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  LayoutDashboard,
-  Compass,
-  Calendar,
-  CheckSquare,
-  Code2,
-  FileCheck2,
+  LayoutGrid,
   Video,
+  CheckSquare,
+  Calendar,
   FileText,
   Building2,
+  Settings,
+  Search,
+  ChevronRight,
+  LogOut,
+  PanelLeftClose,
+  PanelLeft,
   Users,
   Database,
   Download,
+  FileCheck2,
 } from 'lucide-react';
 
-interface SidebarLink {
-  to: string;
-  label: string;
-  icon: React.ElementType;
-  badge?: string;
+interface SidebarProps {
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export const Sidebar: React.FC = () => {
-  const { user } = useAuth();
+export const Sidebar: React.FC<SidebarProps> = () => {
+  const { user, logout, switchRoleDemo } = useAuth();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [collapsed, setCollapsed] = useState(false);
+
   if (!user) return null;
 
-  const studentLinks: SidebarLink[] = [
-    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/diagnostic', label: 'Readiness diagnostic', icon: Compass, badge: 'Required' },
-    { to: '/roadmap', label: 'Curated roadmap', icon: Calendar },
-    { to: '/practice', label: 'Practice engine', icon: CheckSquare },
-    { to: '/coding', label: 'Coding workspace', icon: Code2 },
-    { to: '/mocktests', label: 'Mock assessments', icon: FileCheck2 },
-    { to: '/interviews', label: 'Mock interviews', icon: Video },
-    { to: '/resume', label: 'Resume intelligence', icon: FileText },
-    { to: '/companies', label: 'Company prep hub', icon: Building2 },
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const studentPlatformLinks = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+    { to: '/interviews', label: 'Mock Interviews', icon: Video },
+    { to: '/practice', label: 'Practice & Tests', icon: CheckSquare },
+    { to: '/roadmap', label: 'Curated Roadmap', icon: Calendar },
+    { to: '/resume', label: 'Resume AI', icon: FileText },
+    { to: '/companies', label: 'Company Hub', icon: Building2 },
   ];
 
-  const adminLinks: SidebarLink[] = [
-    { to: '/admin', label: 'Admin overview', icon: LayoutDashboard },
-    { to: '/admin/students', label: 'Student cohort', icon: Users },
-    { to: '/admin/questions', label: 'Question bank', icon: Database },
-    { to: '/admin/tests', label: 'Test publisher', icon: FileCheck2 },
-    { to: '/admin/reports', label: 'Accreditation export', icon: Download },
+  const adminPlatformLinks = [
+    { to: '/admin', label: 'Overview', icon: LayoutGrid },
+    { to: '/admin/students', label: 'Student Cohort', icon: Users },
+    { to: '/admin/questions', label: 'Question Bank', icon: Database },
+    { to: '/admin/tests', label: 'Test Publisher', icon: FileCheck2 },
+    { to: '/admin/reports', label: 'Reports Export', icon: Download },
   ];
 
-  const mentorLinks: SidebarLink[] = [
-    { to: '/mentor', label: 'Interview schedule', icon: Video },
-    { to: '/mocktests', label: 'Question bank review', icon: Database },
+  const mentorPlatformLinks = [
+    { to: '/mentor', label: 'Interview Schedule', icon: Video },
+    { to: '/mocktests', label: 'Question Bank Review', icon: Database },
   ];
 
-  const currentLinks =
-    user.role === 'ADMIN' ? adminLinks : user.role === 'INTERVIEWER' ? mentorLinks : studentLinks;
+  const platformLinks =
+    user.role === 'ADMIN'
+      ? adminPlatformLinks
+      : user.role === 'INTERVIEWER'
+      ? mentorPlatformLinks
+      : studentPlatformLinks;
+
+  const filteredLinks = searchQuery
+    ? platformLinks.filter((l) => l.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : platformLinks;
 
   return (
-    <aside className="w-60 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 min-h-[calc(100vh-3.5rem)] select-none">
-      <div className="p-3">
-        {/* Navigation Category Label: Sentence case, quiet 24px above, 8px below */}
-        <div className="px-3 pt-3 pb-2 text-[11px] font-medium text-slate-400 dark:text-slate-500">
-          {user.role === 'ADMIN' ? 'Administration' : user.role === 'INTERVIEWER' ? 'Mentorship' : 'Placement Curriculum'}
+    <aside
+      className={`h-screen bg-[#0e0f14] border-r border-zinc-800/70 flex flex-col shrink-0 select-none transition-all duration-300 z-30 ${
+        collapsed ? 'w-20' : 'w-64'
+      }`}
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      {/* 1. Header with Logo & Collapse Toggle */}
+      <div className="h-16 px-4 flex items-center justify-between border-b border-zinc-800/60">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <img
+            src="/images/niche_logo.png"
+            alt="NICHE"
+            className="h-7 w-auto object-contain brightness-95"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+            }}
+          />
+          {!collapsed && (
+            <span className="text-xs font-semibold tracking-wider uppercase text-zinc-200 truncate">
+              NICHE PRP
+            </span>
+          )}
         </div>
-
-        {/* 36px Height, 2px Gap, Line Icons, Fixed 18px Icon Box */}
-        <nav className="space-y-0.5">
-          {currentLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  `flex items-center justify-between h-9 px-3 rounded text-xs transition-colors ${
-                    isActive
-                      ? 'bg-slate-100 text-slate-900 font-medium dark:bg-slate-800 dark:text-white'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/50'
-                  }`
-                }
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Icon className="w-4 h-4 shrink-0 text-slate-500 dark:text-slate-400" />
-                  <span className="truncate">{link.label}</span>
-                </div>
-                {link.badge && (
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                    {link.badge}
-                  </span>
-                )}
-              </NavLink>
-            );
-          })}
-        </nav>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-zinc-500 hover:text-zinc-200 transition-colors p-1.5 rounded-lg hover:bg-zinc-800/60"
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+        </button>
       </div>
 
-      {/* Bottom Footer Info: Minimal, quiet text */}
-      <div className="mt-auto p-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 dark:text-slate-500 leading-normal">
-        <div className="font-semibold text-slate-700 dark:text-slate-300">Noorul Islam University</div>
-        <div className="text-[10px] text-teal-600 dark:text-teal-400">NAAC 'A' Accredited • Dept. of CSE</div>
-        <div className="text-[10px] text-slate-400 mt-0.5">PlacementOS v2.4 LTS</div>
+      {/* 2. Search Input (Like Reference Image: Search... ⌘K) */}
+      {!collapsed && (
+        <div className="p-3">
+          <div className="relative flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/80 px-3 py-2 text-xs text-zinc-400 focus-within:border-zinc-700 transition-colors">
+            <Search className="w-3.5 h-3.5 text-zinc-500 mr-2 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent border-none outline-none text-zinc-200 placeholder-zinc-500 text-xs w-full"
+            />
+            <kbd className="px-1.5 py-0.5 rounded bg-zinc-800/90 text-[10px] text-zinc-400 font-mono tracking-widest shrink-0 border border-zinc-700/50">
+              ⌘K
+            </kbd>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Navigation Sections */}
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-5">
+        {/* Section: Platform */}
+        <div className="space-y-1">
+          {!collapsed && (
+            <div className="px-3 pt-1 pb-1.5 text-[10px] font-medium tracking-wider text-zinc-500 uppercase">
+              Platform
+            </div>
+          )}
+          <nav className="space-y-1">
+            {filteredLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  title={collapsed ? link.label : undefined}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-normal transition-all duration-200 ${
+                      isActive
+                        ? 'bg-zinc-800/90 text-white font-medium shadow-sm'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+                    } ${collapsed ? 'justify-center px-0' : ''}`
+                  }
+                >
+                  <Icon className="w-4 h-4 shrink-0 text-zinc-400 group-hover:text-zinc-200" />
+                  {!collapsed && <span className="truncate">{link.label}</span>}
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Section: System */}
+        <div className="space-y-1">
+          {!collapsed && (
+            <div className="px-3 pt-1 pb-1.5 text-[10px] font-medium tracking-wider text-zinc-500 uppercase">
+              System
+            </div>
+          )}
+          <NavLink
+            to="/profile"
+            title={collapsed ? 'Settings' : undefined}
+            className={({ isActive }) =>
+              `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-all duration-200 ${
+                isActive
+                  ? 'bg-zinc-800/90 text-white font-medium'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+              } ${collapsed ? 'justify-center px-0' : ''}`
+            }
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="w-4 h-4 shrink-0 text-zinc-400" />
+              {!collapsed && <span>Settings</span>}
+            </div>
+            {!collapsed && <ChevronRight className="w-3.5 h-3.5 text-zinc-600" />}
+          </NavLink>
+        </div>
+      </div>
+
+      {/* 4. Bottom User Profile Card (Reference Image Style) */}
+      <div className="p-3 border-t border-zinc-800/60">
+        <div
+          className={`flex items-center gap-3 p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/80 ${
+            collapsed ? 'justify-center' : 'justify-between'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700/60 flex items-center justify-center text-xs font-semibold text-white shrink-0">
+              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            {!collapsed && (
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-white truncate">{user.name || 'Student User'}</div>
+                <div className="text-[10px] text-zinc-500 truncate capitalize">
+                  {user.role === 'STUDENT' ? 'Student' : user.role === 'ADMIN' ? 'TPO Admin' : 'Mentor'}
+                </div>
+              </div>
+            )}
+          </div>
+          {!collapsed && (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleLogout}
+                className="text-zinc-500 hover:text-rose-400 p-1.5 rounded-lg hover:bg-zinc-800/80 transition-colors"
+                title="Sign out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );
