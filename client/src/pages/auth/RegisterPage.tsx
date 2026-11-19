@@ -117,9 +117,9 @@ export const RegisterPage: React.FC = () => {
           </defs>
         </svg>
 
-        {/* Giant Watermark Text: N I C H E */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span className="font-extrabold text-[15vw] sm:text-[17vw] tracking-[0.25em] text-white/[0.045] uppercase leading-none transform -translate-y-12">
+        {/* Giant Watermark Text: NICHE on one single line, faded softly */}
+        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none px-4">
+          <span className="font-extrabold text-[10vw] sm:text-[12vw] tracking-[0.18em] sm:tracking-[0.22em] uppercase leading-none opacity-[0.08] sm:opacity-[0.10] whitespace-nowrap text-zinc-300">
             N I C H E
           </span>
         </div>

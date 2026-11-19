@@ -90,15 +90,9 @@ export const LoginPage: React.FC = () => {
           }}
         />
 
-        {/* Center Illuminated Area: N I C H E written like CONTACT in the reference image */}
-        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none">
-          <span
-            className="font-extrabold text-[15vw] sm:text-[16vw] tracking-[0.22em] uppercase leading-none opacity-20 sm:opacity-25"
-            style={{
-              color: '#a1a1aa',
-              textShadow: '0 0 60px rgba(255,255,255,0.08), 0 0 100px rgba(13,148,136,0.12)',
-            }}
-          >
+        {/* Center Illuminated Area: NICHE on one single line, faded softly */}
+        <div className="absolute top-[12%] sm:top-[14%] inset-x-0 flex items-center justify-center pointer-events-none select-none px-4">
+          <span className="font-extrabold text-[10vw] sm:text-[12vw] tracking-[0.18em] sm:tracking-[0.22em] uppercase leading-none opacity-[0.08] sm:opacity-[0.10] whitespace-nowrap text-zinc-300">
             N I C H E
           </span>
         </div>
