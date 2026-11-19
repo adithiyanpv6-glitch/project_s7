@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api/client';
-import { Button } from '../../components/common/Button';
-import { Card } from '../../components/common/Card';
-import { GraduationCap, Mail, Lock, User, Shield } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
+  const [role, setRole] = useState<'STUDENT' | 'INTERVIEWER' | 'ADMIN'>('STUDENT');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'STUDENT' | 'ADMIN' | 'INTERVIEWER'>('STUDENT');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -33,126 +31,256 @@ export const RegisterPage: React.FC = () => {
 
       if (role === 'ADMIN') navigate('/admin');
       else if (role === 'INTERVIEWER') navigate('/mentor');
-      else navigate('/onboarding');
+      else navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Registration failed.');
+      setError(err.message || 'Registration failed. Please check details.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-navy-900 border border-navy-700 items-center justify-center text-brand-400 shadow-md">
-            <GraduationCap className="w-6 h-6" />
-          </div>
-          <h2 className="text-2xl font-extrabold text-navy-950 dark:text-white tracking-tight">
-            Create Your Account
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Join PlacementPrep to build your personalized placement roadmap
-          </p>
-        </div>
+    <main
+      className="relative min-h-screen w-full bg-black text-white flex flex-col justify-between items-center py-6 sm:py-10 px-4 overflow-hidden select-none"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      {/* 1. BACKGROUND GLOW & TECH CIRCUIT TRACES */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Top-center emerald/cyan ambient aura */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[85vw] max-w-4xl h-[45vh] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 65% 55% at 50% 0%, rgba(13, 148, 136, 0.22) 0%, rgba(5, 70, 65, 0.12) 45%, rgba(0, 0, 0, 0) 80%)',
+          }}
+        />
 
-        <Card className="p-6 shadow-md">
+        {/* Left Tech Circuit Trace Lines with Glow */}
+        <svg
+          className="absolute top-12 left-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
+          viewBox="0 0 320 200"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 0 40 L 140 40 L 190 90 L 260 90"
+            stroke="url(#regLeftTraceGrad)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <circle cx="260" cy="90" r="3.5" fill="#2dd4bf" />
+          <circle cx="260" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
+          <path
+            d="M 0 130 L 90 130 L 120 160 L 180 160"
+            stroke="rgba(255,255,255,0.2)"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          <circle cx="180" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
+          <defs>
+            <linearGradient id="regLeftTraceGrad" x1="0" y1="40" x2="260" y2="90" gradientUnits="userSpaceOnUse">
+              <stop stopColor="rgba(255,255,255,0.6)" />
+              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
+              <stop offset="1" stopColor="rgba(45,212,191,1)" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Right Tech Circuit Trace Lines with Glow */}
+        <svg
+          className="absolute top-12 right-0 w-64 sm:w-80 h-48 opacity-45 pointer-events-none"
+          viewBox="0 0 320 200"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 320 40 L 180 40 L 130 90 L 60 90"
+            stroke="url(#regRightTraceGrad)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <circle cx="60" cy="90" r="3.5" fill="#2dd4bf" />
+          <circle cx="60" cy="90" r="7" stroke="#2dd4bf" strokeWidth="1" opacity="0.4" />
+          <path
+            d="M 320 130 L 230 130 L 200 160 L 140 160"
+            stroke="rgba(255,255,255,0.2)"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          <circle cx="140" cy="160" r="2.5" fill="rgba(255,255,255,0.6)" />
+          <defs>
+            <linearGradient id="regRightTraceGrad" x1="320" y1="40" x2="60" y2="90" gradientUnits="userSpaceOnUse">
+              <stop stopColor="rgba(255,255,255,0.6)" />
+              <stop offset="0.6" stopColor="rgba(45,212,191,0.8)" />
+              <stop offset="1" stopColor="rgba(45,212,191,1)" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Giant Watermark Text: N I C H E */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+          <span className="font-extrabold text-[15vw] sm:text-[17vw] tracking-[0.25em] text-white/[0.045] uppercase leading-none transform -translate-y-12">
+            N I C H E
+          </span>
+        </div>
+      </div>
+
+      {/* 2. TOP AT CENTRE: COLLEGE NAME IN MONTSERRAT */}
+      <header className="relative z-10 w-full flex items-center justify-between max-w-6xl px-4 pt-1 sm:pt-2">
+        <Link
+          to="/login"
+          className="text-zinc-500 hover:text-white transition-colors text-xs tracking-widest flex items-center gap-1.5 uppercase font-light"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" /> Sign In
+        </Link>
+
+        <h2 className="text-xs sm:text-sm md:text-base font-light tracking-[0.22em] sm:tracking-[0.3em] text-zinc-200 uppercase text-center flex-1 px-2">
+          NOORUL ISLAM CENTRE FOR HIGHER EDUCATION
+        </h2>
+
+        <div className="w-12 hidden sm:block" />
+      </header>
+
+      {/* 3. CENTRE: GLASSMORPHISM REGISTER BOX */}
+      <div className="relative z-10 w-full max-w-md my-auto px-2 py-4">
+        <div className="relative rounded-3xl bg-zinc-950/70 backdrop-blur-2xl border border-zinc-800/90 shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(13,148,136,0.08)] p-6 sm:p-8 space-y-5">
+          
+          {/* 3 Role Options in Exact Order: Student, Mentor, Admin */}
+          <div className="space-y-2">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-zinc-400 font-light block text-center">
+              Register Role Category
+            </span>
+            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800/80">
+              <button
+                type="button"
+                onClick={() => setRole('STUDENT')}
+                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
+                  role === 'STUDENT'
+                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                }`}
+              >
+                Student
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('INTERVIEWER')}
+                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
+                  role === 'INTERVIEWER'
+                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                }`}
+              >
+                Mentor
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('ADMIN')}
+                className={`py-2 px-2.5 rounded-lg text-xs tracking-wider uppercase transition-all duration-200 font-medium ${
+                  role === 'ADMIN'
+                    ? 'bg-zinc-800 text-white shadow-sm border border-zinc-700/80'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                }`}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center space-y-1">
+            <h3 className="text-lg font-light tracking-wide text-white uppercase">
+              Create Profile
+            </h3>
+            <p className="text-[11px] text-zinc-400 font-light tracking-wider">
+              {role === 'STUDENT'
+                ? 'Join NICHE CSE Placement Cohort 2026'
+                : role === 'INTERVIEWER'
+                ? 'Register Placement Mentor Credentials'
+                : 'Request Institutional Admin Access'}
+            </p>
+          </div>
+
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs">
+            <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs text-center font-light tracking-wide">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          <form onSubmit={handleSubmit} className="space-y-3.5">
+            <div className="space-y-1">
+              <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
                 Full Name
               </label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Aditya Vardhan"
-                  className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Adithiyan P V"
+                className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-zinc-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
+              />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                College / University Email
+            <div className="space-y-1">
+              <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
+                Email Address
               </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="aditya@nit.ac.in"
-                  className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
-                />
-              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@niuniv.edu"
+                className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-zinc-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
+              />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <div className="space-y-1">
+              <label className="text-[11px] font-light tracking-wider uppercase text-zinc-300">
                 Password
               </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Minimum 6 characters"
-                  className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
-                />
-              </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-zinc-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none transition-colors"
+              />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Account Role
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['STUDENT', 'ADMIN', 'INTERVIEWER'] as const).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r)}
-                    className={`py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all ${
-                      role === r
-                        ? 'bg-brand-50 border-brand-500 text-brand-700 dark:bg-brand-950 dark:text-brand-300'
-                        : 'border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    {r === 'STUDENT' ? 'Student' : r === 'ADMIN' ? 'Placement Cell' : 'Mentor'}
-                  </button>
-                ))}
-              </div>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-white hover:bg-zinc-200 text-black font-semibold tracking-[0.15em] text-xs uppercase py-3.5 rounded-xl transition-all duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isLoading ? 'Registering...' : 'Submit'}
+              </button>
             </div>
-
-            <Button type="submit" isLoading={isLoading} className="w-full">
-              Register & Continue
-            </Button>
           </form>
 
-          <div className="mt-4 text-center">
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              Already registered?{' '}
-              <Link to="/login" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                Sign in here
-              </Link>
-            </span>
+          <div className="text-center pt-2 border-t border-zinc-900 text-xs">
+            <span className="text-zinc-400 font-light">Already registered? </span>
+            <Link
+              to="/login"
+              className="text-zinc-200 hover:text-white underline underline-offset-4 tracking-wider uppercase text-[11px]"
+            >
+              Sign In
+            </Link>
           </div>
-        </Card>
+
+        </div>
       </div>
-    </div>
+
+      {/* 4. CENTRE AT BOTTOM: NAME OF THE WEBSITE IN MONTSERRAT */}
+      <footer className="relative z-10 w-full text-center pb-2 pt-4">
+        <p className="text-[10px] sm:text-xs md:text-sm font-light tracking-[0.35em] sm:tracking-[0.45em] text-zinc-500 uppercase">
+          PLACEMENT READINESS PLATFORM OF NICHE
+        </p>
+      </footer>
+    </main>
   );
 };
+
+export default RegisterPage;
