@@ -10,73 +10,69 @@ export const LandingPage: React.FC = () => {
       className="relative min-h-screen w-full bg-black text-white flex flex-col items-center justify-center overflow-hidden select-none"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* BACKGROUND: Zoomed-out campus images starting from outer sides and racing towards the centre like angled perspective rays */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center [perspective:1400px]">
+      {/* BACKGROUND: Images fill screen from left & right borders, rotated in 3D perspective towards centre without vertical tilt */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex">
         
-        {/* Left Campus Ray - Anchored to left edge, zoomed out, racing inwards to centre */}
+        {/* Left Campus Image - Fills screen height, starts flush at left border, rotates inwards towards centre (no Z-tilt) */}
         <div
-          className="absolute inset-y-0 left-0 w-[52%] flex items-center justify-center overflow-hidden origin-left"
-          style={{
-            transform: 'rotateY(18deg) rotateZ(-2deg) scale(0.9)',
-            transformStyle: 'preserve-3d',
-          }}
+          className="absolute inset-y-0 left-0 w-1/2 overflow-hidden flex items-center justify-end"
+          style={{ perspective: '1200px' }}
         >
-          <img
-            src="/images/niche_campus_left.jpg"
-            alt="Noorul Islam Campus Left"
-            className="w-full h-auto max-h-[88vh] object-cover rounded-sm opacity-50 transition-opacity duration-500"
-            style={{
-              maskImage:
-                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
-              WebkitMaskImage:
-                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'destination-in',
-            }}
-          />
-          {/* Subtle light streak along the ray path */}
           <div
-            className="absolute inset-0 bg-gradient-to-r from-white/[0.06] via-transparent to-transparent pointer-events-none"
+            className="w-full h-full origin-left"
             style={{
-              clipPath: 'polygon(0% 15%, 100% 40%, 100% 60%, 0% 85%)',
+              transform: 'rotateY(16deg)',
+              transformStyle: 'preserve-3d',
             }}
-          />
+          >
+            <img
+              src="/images/niche_campus_left.jpg"
+              alt="Noorul Islam Campus Left"
+              className="w-full h-full object-cover object-left opacity-50"
+              style={{
+                maskImage:
+                  'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'destination-in',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Right Campus Ray - Anchored to right edge, zoomed out, racing inwards to centre */}
+        {/* Right Campus Image - Fills screen height, starts flush at right border, rotates inwards towards centre (no Z-tilt) */}
         <div
-          className="absolute inset-y-0 right-0 w-[52%] flex items-center justify-center overflow-hidden origin-right"
-          style={{
-            transform: 'rotateY(-18deg) rotateZ(2deg) scale(0.9)',
-            transformStyle: 'preserve-3d',
-          }}
+          className="absolute inset-y-0 right-0 w-1/2 overflow-hidden flex items-center justify-start"
+          style={{ perspective: '1200px' }}
         >
-          <img
-            src="/images/niche_campus_right.jpg"
-            alt="Noorul Islam Campus Right"
-            className="w-full h-auto max-h-[88vh] object-cover rounded-sm opacity-50 transition-opacity duration-500"
-            style={{
-              maskImage:
-                'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
-              WebkitMaskImage:
-                'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)',
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'destination-in',
-            }}
-          />
-          {/* Subtle light streak along the ray path */}
           <div
-            className="absolute inset-0 bg-gradient-to-l from-white/[0.06] via-transparent to-transparent pointer-events-none"
+            className="w-full h-full origin-right"
             style={{
-              clipPath: 'polygon(100% 15%, 0% 40%, 0% 60%, 100% 85%)',
+              transform: 'rotateY(-16deg)',
+              transformStyle: 'preserve-3d',
             }}
-          />
+          >
+            <img
+              src="/images/niche_campus_right.jpg"
+              alt="Noorul Islam Campus Right"
+              className="w-full h-full object-cover object-right opacity-50"
+              style={{
+                maskImage:
+                  'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0) 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'destination-in',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Center Convergence Seam - Where both rays meet and join */}
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-32 bg-gradient-to-r from-transparent via-black/40 to-transparent pointer-events-none" />
+        {/* Center Convergence Seam - Soft blend where both walls join */}
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-40 bg-gradient-to-r from-transparent via-black/50 to-transparent pointer-events-none" />
 
-        {/* Deep Black Overwhelming Dominance */}
+        {/* Deep Black Dominant Overlays & Center Readability Shield */}
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
         <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-3xl bg-radial from-black/95 via-black/60 to-transparent pointer-events-none" />
