@@ -1,10 +1,58 @@
 import { Router, Response } from 'express';
+import multer from 'multer';
 import { prisma } from '../utils/prisma';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import { analyzeResumeText } from '../services/resumeParser.service';
 import { recalculateStudentReadiness } from '../services/readiness.service';
 
+const { PDFParse } = require('pdf-parse');
+
 const router = Router();
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+});
+
+// Upload and Parse PDF / Text Resume
+router.post('/upload-pdf', authenticate, upload.single('file'), async (req: AuthenticatedRequest, res: Response, next) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'Please upload a PDF or text file.' });
+      return;
+    }
+
+    let text = '';
+    const originalName = req.file.originalname;
+
+    if (originalName.toLowerCase().endsWith('.pdf') || req.file.mimetype === 'application/pdf') {
+      try {
+        const parser = new PDFParse({ data: req.file.buffer });
+        const parsed = await parser.getText();
+        text = parsed.text || '';
+      } catch (pdfErr: any) {
+        // Fallback: try raw string buffer extraction if binary parser catches stream
+        text = req.file.buffer.toString('latin1').replace(/[^\x20-\x7E\n\t]/g, ' ');
+      }
+    } else {
+      text = req.file.buffer.toString('utf-8');
+    }
+
+    if (!text || text.trim().length < 30) {
+      res.status(400).json({
+        error: 'Could not extract sufficient text from this file. Please ensure it is text-readable and not an image scan.',
+      });
+      return;
+    }
+
+    res.json({
+      text: text.trim(),
+      fileName: originalName,
+    });
+  } catch (err: any) {
+    next(err);
+  }
+});
 
 // Analyze Resume
 router.post('/analyze', authenticate, async (req: AuthenticatedRequest, res: Response, next) => {

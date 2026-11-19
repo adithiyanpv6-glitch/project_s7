@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   History,
+  Loader2,
 } from 'lucide-react';
 
 export const ResumeAnalyzer: React.FC = () => {
@@ -18,6 +19,7 @@ export const ResumeAnalyzer: React.FC = () => {
   const [rawText, setRawText] = useState('');
   const [fileName, setFileName] = useState('My_Resume.txt');
   const [targetRole, setTargetRole] = useState('Software Development Engineer');
+  const [isUploading, setIsUploading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
@@ -38,23 +40,54 @@ export const ResumeAnalyzer: React.FC = () => {
     fetchHistory();
   }, []);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      setRawText(content || '');
-      showToast(`Loaded ${file.name}.`, 'info');
-    };
-    reader.readAsText(file);
+
+    if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
+      setIsUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const token = localStorage.getItem('placementprep_token');
+        const response = await fetch('/api/resume/upload-pdf', {
+          method: 'POST',
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to parse PDF document.');
+        }
+
+        setRawText(data.text);
+        showToast(`Parsed PDF "${file.name}" successfully! Review or click Analyze.`, 'success');
+      } catch (err: any) {
+        showToast(err.message || 'Failed to extract text from PDF.', 'error');
+      } finally {
+        setIsUploading(false);
+      }
+    } else {
+      // Text or Markdown file
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        setRawText(content || '');
+        showToast(`Loaded ${file.name}.`, 'info');
+      };
+      reader.readAsText(file);
+    }
   };
 
   const handleAnalyze = async () => {
     if (!rawText || rawText.trim().length < 50) {
-      showToast('Please paste resume text with at least 50 characters.', 'warning');
+      showToast('Please paste or upload resume content with at least 50 characters.', 'warning');
       return;
     }
 
@@ -84,9 +117,14 @@ export const ResumeAnalyzer: React.FC = () => {
     >
       {/* 1. Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
-          Resume AI
-        </h1>
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
+            Resume AI
+          </h1>
+          <p className="text-xs text-zinc-400 font-light mt-0.5">
+            ATS algorithm audit, keyword gap analysis, and role alignment scoring.
+          </p>
+        </div>
       </div>
 
       {/* 2. Main Two-Column Analysis Workspace */}
@@ -95,7 +133,7 @@ export const ResumeAnalyzer: React.FC = () => {
         <div className="lg:col-span-6 space-y-5">
           <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-4">
             <h2 className="text-sm font-medium text-white">
-              Target Role & Input
+              Target Role & Document Upload
             </h2>
 
             <div className="space-y-1.5">
@@ -112,12 +150,23 @@ export const ResumeAnalyzer: React.FC = () => {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs text-zinc-400 font-medium">Resume Text</label>
-                <label className="text-[11px] text-zinc-400 hover:text-white cursor-pointer flex items-center gap-1 font-light">
-                  <Upload className="w-3 h-3" /> Upload File (.txt)
+                <label className="text-[11px] text-zinc-300 hover:text-white cursor-pointer flex items-center gap-1.5 bg-zinc-850 hover:bg-zinc-800 border border-zinc-700/60 px-2.5 py-1 rounded-lg transition-colors font-medium">
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin text-emerald-400" />
+                      <span>Parsing PDF...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3 h-3" />
+                      <span>Upload PDF / TXT</span>
+                    </>
+                  )}
                   <input
                     type="file"
-                    accept=".txt,.md"
+                    accept=".pdf,.txt,.md"
                     onChange={handleFileUpload}
+                    disabled={isUploading}
                     className="hidden"
                   />
                 </label>
@@ -127,14 +176,14 @@ export const ResumeAnalyzer: React.FC = () => {
                 rows={9}
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
-                placeholder="Paste your full resume text here (projects, skills, education, experience)..."
+                placeholder="Upload your resume PDF above or paste resume text here (projects, technical skills, education, work experience)..."
                 className="w-full p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-500 font-mono leading-relaxed outline-none focus:border-zinc-600 resize-none"
               />
             </div>
 
             <button
               type="button"
-              disabled={isAnalyzing || !rawText}
+              disabled={isAnalyzing || isUploading || !rawText}
               onClick={handleAnalyze}
               className="w-full py-2.5 rounded-xl bg-white hover:bg-zinc-200 disabled:opacity-40 text-black text-xs font-medium tracking-wide transition-all shadow-sm cursor-pointer"
             >
@@ -230,7 +279,7 @@ export const ResumeAnalyzer: React.FC = () => {
             </div>
           ) : (
             <div className="p-12 rounded-2xl bg-[#111217] border border-dashed border-zinc-800/80 text-center text-xs text-zinc-500">
-              Paste or upload your resume on the left to view comprehensive ATS analysis.
+              Upload your PDF resume on the left to view comprehensive ATS analysis and keyword suggestions.
             </div>
           )}
         </div>

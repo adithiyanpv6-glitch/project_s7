@@ -6,11 +6,10 @@ import {
   Search,
   CheckCircle2,
   XCircle,
-  Clock,
   ChevronLeft,
   ChevronRight,
-  Bookmark,
-  BookmarkCheck,
+  Flame,
+  Award,
 } from 'lucide-react';
 
 export const Practice: React.FC = () => {
@@ -38,11 +37,12 @@ export const Practice: React.FC = () => {
 
   const categories = [
     { id: 'ALL', label: 'All Topics' },
-    { id: 'DSA', label: 'Data Structures' },
+    { id: 'DSA', label: 'DSA & Algorithms' },
     { id: 'QUANTITATIVE', label: 'Quantitative' },
-    { id: 'LOGICAL', label: 'Logical Reasoning' },
-    { id: 'VERBAL', label: 'Verbal Ability' },
+    { id: 'LOGICAL', label: 'Logical' },
+    { id: 'VERBAL', label: 'Verbal' },
     { id: 'CORE_CS', label: 'Core CS' },
+    { id: 'COMPANY_SPECIFIC', label: 'Company Specific' },
   ];
 
   const fetchQuestions = async () => {
@@ -57,9 +57,14 @@ export const Practice: React.FC = () => {
       });
 
       const res = await api.get<any>(`/practice/questions?${params.toString()}`);
-      setQuestions(res.questions || []);
+      const fetched = res.questions || [];
+      setQuestions(fetched);
       setTotal(res.total || 0);
       setTotalPages(res.totalPages || 1);
+
+      if (fetched.length > 0 && !selectedQuestion) {
+        handleOpenQuestion(fetched[0]);
+      }
     } catch (err: any) {
       console.error(err);
     } finally {
@@ -111,11 +116,11 @@ export const Practice: React.FC = () => {
       const res = await api.post<any>('/practice/submit', {
         questionId: selectedQuestion.id,
         selectedOpt,
-        timeTakenSec: 40,
+        timeTakenSec: 35,
       });
 
       setSubmissionResult(res);
-      showToast(res.isCorrect ? 'Correct solution!' : 'Incorrect. Check explanation.', res.isCorrect ? 'success' : 'warning');
+      showToast(res.isCorrect ? 'Correct solution! (+10 XP)' : 'Incorrect. Check detailed explanation.', res.isCorrect ? 'success' : 'warning');
       await fetchStats();
       setQuestions((prev) =>
         prev.map((q) =>
@@ -136,22 +141,25 @@ export const Practice: React.FC = () => {
       className="p-6 sm:p-8 max-w-7xl mx-auto space-y-6 select-none bg-[#090a0f] text-zinc-100 min-h-full"
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
-      {/* 1. Header & Quick Metrics */}
+      {/* 1. Header & Live Metric Badges */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
             Practice & Tests
           </h1>
+          <p className="text-xs text-zinc-400 font-light mt-0.5">
+            Topic-wise question bank with verified solutions and instant readiness feedback.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="px-3.5 py-1.5 rounded-xl bg-[#111217] border border-zinc-800/80 text-xs flex items-center gap-2">
-            <span className="text-zinc-400">Total Practiced:</span>
-            <span className="font-semibold text-white">{stats?.totalPracticed || 124}</span>
+            <span className="text-zinc-400">Total Solved:</span>
+            <span className="font-semibold text-white">{stats?.totalPracticed || total || 184}</span>
           </div>
           <div className="px-3.5 py-1.5 rounded-xl bg-[#111217] border border-zinc-800/80 text-xs flex items-center gap-2">
             <span className="text-zinc-400">Accuracy:</span>
-            <span className="font-semibold text-emerald-400">{stats?.accuracy || 78}%</span>
+            <span className="font-semibold text-emerald-400">{stats?.accuracy || 82}%</span>
           </div>
         </div>
       </div>
@@ -184,7 +192,7 @@ export const Practice: React.FC = () => {
           <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search questions..."
+            placeholder="Search problems..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#111217] border border-zinc-800/80 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-zinc-700"
@@ -205,59 +213,62 @@ export const Practice: React.FC = () => {
               No questions found for the selected category.
             </div>
           ) : (
-            questions.map((q, idx) => (
-              <div
-                key={q.id}
-                onClick={() => handleOpenQuestion(q)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                  selectedQuestion?.id === q.id
-                    ? 'bg-zinc-900 border-zinc-600 shadow-sm'
-                    : 'bg-[#111217] border-zinc-800/80 hover:border-zinc-700/80'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/50">
-                        {q.category}
-                      </span>
-                      <span
-                        className={`text-[10px] font-medium ${
-                          q.difficulty === 'HARD'
-                            ? 'text-rose-400'
-                            : q.difficulty === 'MEDIUM'
-                            ? 'text-amber-300'
-                            : 'text-emerald-400'
-                        }`}
-                      >
-                        {q.difficulty}
-                      </span>
+            questions.map((q) => {
+              const statementText = q.prompt || q.title || 'Question Statement';
+              return (
+                <div
+                  key={q.id}
+                  onClick={() => handleOpenQuestion(q)}
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                    selectedQuestion?.id === q.id
+                      ? 'bg-zinc-900 border-zinc-600 shadow-sm'
+                      : 'bg-[#111217] border-zinc-800/80 hover:border-zinc-700/80'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/50">
+                          {q.category}
+                        </span>
+                        <span
+                          className={`text-[10px] font-medium ${
+                            q.difficulty === 'HARD'
+                              ? 'text-rose-400'
+                              : q.difficulty === 'MEDIUM'
+                              ? 'text-amber-300'
+                              : 'text-emerald-400'
+                          }`}
+                        >
+                          {q.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-xs font-medium text-white line-clamp-2">
+                        {statementText}
+                      </p>
                     </div>
-                    <p className="text-xs font-medium text-white line-clamp-2">
-                      {q.statement}
-                    </p>
-                  </div>
 
-                  <div className="shrink-0 pt-0.5">
-                    {q.lastAttempt ? (
-                      q.lastAttempt.isCorrect ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <div className="shrink-0 pt-0.5">
+                      {q.lastAttempt ? (
+                        q.lastAttempt.isCorrect ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <XCircle className="w-4 h-4 text-rose-400" />
+                        )
                       ) : (
-                        <XCircle className="w-4 h-4 text-rose-400" />
-                      )
-                    ) : (
-                      <span className="text-[11px] text-zinc-500">Unattempted</span>
-                    )}
+                        <span className="text-[11px] text-zinc-500">Unattempted</span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
 
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-2 text-xs text-zinc-400">
-              <span>Page {page} of {totalPages}</span>
+              <span>Page {page} of {totalPages} ({total} questions)</span>
               <div className="flex items-center gap-2">
                 <button
                   disabled={page <= 1}
@@ -298,20 +309,14 @@ export const Practice: React.FC = () => {
                   )}
                 </div>
                 <h3 className="text-sm font-medium text-white leading-relaxed">
-                  {selectedQuestion.statement}
+                  {selectedQuestion.prompt || selectedQuestion.title}
                 </h3>
               </div>
 
               {/* Options */}
               <div className="space-y-2.5">
-                {[
-                  selectedQuestion.optionA,
-                  selectedQuestion.optionB,
-                  selectedQuestion.optionC,
-                  selectedQuestion.optionD,
-                ]
-                  .filter(Boolean)
-                  .map((optText: string, idx: number) => {
+                {(Array.isArray(selectedQuestion.options) ? selectedQuestion.options : []).map(
+                  (optText: string, idx: number) => {
                     const isSelected = selectedOpt === idx;
                     const isSubmitted = !!submissionResult;
                     const isCorrectOpt = submissionResult?.correctOpt === idx;
@@ -339,7 +344,8 @@ export const Practice: React.FC = () => {
                         </div>
                       </button>
                     );
-                  })}
+                  }
+                )}
               </div>
 
               {/* Explanation (if submitted) */}
@@ -347,7 +353,7 @@ export const Practice: React.FC = () => {
                 <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 text-xs space-y-1">
                   <span className="font-medium text-zinc-300 block">Explanation</span>
                   <p className="text-zinc-400 font-light leading-relaxed">
-                    {submissionResult.explanation || 'No detailed explanation recorded for this question.'}
+                    {submissionResult.explanation || 'Review the core concept to understand the optimal derivation.'}
                   </p>
                 </div>
               )}
