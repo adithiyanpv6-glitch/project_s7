@@ -16,28 +16,28 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const clamped = Math.max(0, Math.min(100, Math.round(value)));
 
   const colorStyles = {
-    brand: 'bg-brand-600',
-    emerald: 'bg-emerald-500',
-    amber: 'bg-amber-500',
-    rose: 'bg-rose-500',
-    navy: 'bg-navy-700',
+    brand: 'bg-white',
+    emerald: 'bg-emerald-400',
+    amber: 'bg-amber-400',
+    rose: 'bg-rose-400',
+    navy: 'bg-zinc-400',
   }[color];
 
   const heightStyles = {
-    sm: 'h-1.5',
-    md: 'h-2.5',
-    lg: 'h-4',
+    sm: 'h-1',
+    md: 'h-1.5',
+    lg: 'h-2.5',
   }[size];
 
   return (
     <div className="w-full">
       {showLabel && (
-        <div className="flex justify-between items-center text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+        <div className="flex justify-between items-center text-xs font-light text-zinc-400 mb-1.5">
           <span>Progress</span>
-          <span>{clamped}%</span>
+          <span className="text-white font-medium">{clamped}%</span>
         </div>
       )}
-      <div className={`w-full bg-slate-200 dark:bg-navy-800 rounded-full overflow-hidden ${heightStyles}`}>
+      <div className={`w-full bg-zinc-800/80 rounded-full overflow-hidden ${heightStyles}`}>
         <div
           className={`${colorStyles} h-full transition-all duration-500 rounded-full`}
           style={{ width: `${clamped}%` }}
@@ -48,28 +48,25 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 };
 
 interface ProgressRingProps {
-  score: number; // 0 to 100
+  value?: number;
+  score?: number;
   size?: number;
   strokeWidth?: number;
   label?: string;
-  subtitle?: string;
 }
 
 export const ProgressRing: React.FC<ProgressRingProps> = ({
+  value,
   score,
-  size = 140,
-  strokeWidth = 10,
-  label = 'Readiness',
-  subtitle = 'Placement Score',
+  size = 100,
+  strokeWidth = 8,
+  label,
 }) => {
+  const actualVal = value ?? score ?? 0;
+  const clamped = Math.max(0, Math.min(100, Math.round(actualVal)));
   const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const clamped = Math.max(0, Math.min(100, score));
+  const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clamped / 100) * circumference;
-
-  let strokeColor = '#0d9488'; // brand-600
-  if (clamped >= 80) strokeColor = '#10b981'; // emerald
-  else if (clamped < 60) strokeColor = '#f59e0b'; // amber
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -78,36 +75,28 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="currentColor"
+          stroke="#27272a"
           strokeWidth={strokeWidth}
-          className="text-slate-200 dark:text-navy-800"
-          fill="transparent"
+          fill="none"
         />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={strokeColor}
+          stroke="#ffffff"
           strokeWidth={strokeWidth}
+          fill="none"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          fill="transparent"
-          className="transition-all duration-1000 ease-out"
+          className="transition-all duration-700 ease-out"
         />
       </svg>
-      <div className="absolute flex flex-col items-center justify-center text-center">
-        <span className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          {clamped}
+      <div className="absolute text-center">
+        <span className="text-xl font-semibold tracking-tight text-white block">
+          {clamped}%
         </span>
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {label}
-        </span>
-        {subtitle && (
-          <span className="text-[9px] text-slate-400 dark:text-slate-500">
-            {subtitle}
-          </span>
-        )}
+        {label && <span className="text-[10px] text-zinc-400 uppercase tracking-wider">{label}</span>}
       </div>
     </div>
   );

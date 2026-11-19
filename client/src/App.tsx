@@ -38,19 +38,12 @@ import { ReportsExport } from './pages/admin/ReportsExport';
 import { MentorDashboard } from './pages/mentor/MentorDashboard';
 
 export const App: React.FC = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('placementprep_theme') === 'dark';
-  });
+  const [darkMode, setDarkMode] = useState<boolean>(true);
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('placementprep_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('placementprep_theme', 'light');
-    }
-  }, [darkMode]);
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('placementprep_theme', 'dark');
+  }, []);
 
   return (
     <BrowserRouter>

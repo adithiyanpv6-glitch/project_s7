@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import { useNotifications } from '../../context/NotificationContext';
-import { Card, CardHeader, CardTitle } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
-import { Badge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import {
   Video,
   Play,
   Calendar,
   ExternalLink,
-  Award,
-  Clock,
+  ChevronRight,
   UserCheck,
   Sparkles,
-  ChevronRight,
-  ShieldCheck,
 } from 'lucide-react';
 
 export const InterviewHub: React.FC = () => {
@@ -29,7 +23,7 @@ export const InterviewHub: React.FC = () => {
 
   // System Mock Start Modal
   const [showSystemModal, setShowSystemModal] = useState(false);
-  const [systemType, setSystemType] = useState('HR');
+  const [systemType, setSystemType] = useState('TECHNICAL');
   const [systemCompany, setSystemCompany] = useState('Amazon');
   const [systemRole, setSystemRole] = useState('Software Development Engineer');
 
@@ -91,7 +85,7 @@ export const InterviewHub: React.FC = () => {
         targetRole: systemRole,
         scheduledFor: mentorDate,
       });
-      showToast('Interview scheduled successfully with mentor!', 'success');
+      showToast('Interview scheduled successfully!', 'success');
       setShowMentorModal(false);
       fetchInterviews();
     } catch (err: any) {
@@ -100,232 +94,238 @@ export const InterviewHub: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Top Banner */}
-      <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 p-6 rounded-2xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-navy-950 dark:text-white">
-              Mock Interview Simulator & Mentorship
-            </h1>
-            <Badge variant="brand" size="sm">STAR Rubric</Badge>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Practice interactive technical, behavioral, and company-specific interviews with automated feedback and 1-on-1 mentor sessions.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button size="sm" onClick={() => setShowSystemModal(true)}>
-            <Play className="w-3.5 h-3.5 mr-1" />
-            Launch AI Mock Interview
-          </Button>
-          <Button size="sm" variant="outline" onClick={() => setShowMentorModal(true)}>
-            <Calendar className="w-3.5 h-3.5 mr-1" />
-            Book Mentor Interview
-          </Button>
-        </div>
+    <div
+      className="p-6 sm:p-8 max-w-7xl mx-auto space-y-6 select-none bg-[#090a0f] text-zinc-100 min-h-full"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      {/* 1. Header: Clean & Minimal */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
+          Mock Interviews
+        </h1>
       </div>
 
-      {/* Two Pillars: System Mock vs Mentor-Led */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6 space-y-4 border-brand-200 dark:border-brand-950 bg-brand-50/20 dark:bg-brand-950/10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white">
-                Interactive System Mock Simulator
-              </h3>
-              <p className="text-[11px] text-slate-500">Instant AI Evaluation & Rubric Feedback</p>
-            </div>
+      {/* 2. Top Action Cards: AI Mock vs 1-on-1 Mentor */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Card 1: AI Mock Simulator */}
+        <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-4 hover:border-zinc-700/80 transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-400">Interactive Simulation</span>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              Instant Feedback
+            </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            Answer structured Technical, HR, and Managerial questions. Our NLP analysis assesses communication clarity, technical depth, and STAR behavioral impact.
-          </p>
-          <Button size="sm" className="w-full" onClick={() => setShowSystemModal(true)}>
-            Start System Mock Interview
-          </Button>
-        </Card>
 
-        <Card className="p-6 space-y-4 border-teal-200 dark:border-teal-950 bg-teal-50/20 dark:bg-teal-950/10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-teal-700 text-white flex items-center justify-center">
-              <UserCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-white">
-                1-on-1 Mentor Mock Interviews
-              </h3>
-              <p className="text-[11px] text-slate-500">Live Video Sessions with Industry Engineers</p>
-            </div>
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-white tracking-tight">
+              AI Mock Interview
+            </h2>
+            <p className="text-xs text-zinc-400 font-light leading-relaxed">
+              Real-time interactive session evaluating communication clarity and technical depth.
+            </p>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            Schedule direct video interviews with alumni and senior engineers from Amazon, Microsoft, TCS, and Zoho for authentic live pressure testing.
-          </p>
-          <Button size="sm" variant="secondary" className="w-full" onClick={() => setShowMentorModal(true)}>
+
+          <button
+            type="button"
+            onClick={() => setShowSystemModal(true)}
+            className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-medium tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Play className="w-3.5 h-3.5 fill-current" />
+            Launch AI Session
+          </button>
+        </div>
+
+        {/* Card 2: Mentor Session */}
+        <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-4 hover:border-zinc-700/80 transition-all">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-400">1-on-1 Mentorship</span>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-800 text-zinc-300 border border-zinc-700/60">
+              Live Mentors
+            </span>
+          </div>
+
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-white tracking-tight">
+              Book Mentor Interview
+            </h2>
+            <p className="text-xs text-zinc-400 font-light leading-relaxed">
+              Schedule live video interview sessions with faculty mentors and alumni engineers.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowMentorModal(true)}
+            className="w-full py-2.5 px-4 rounded-xl bg-zinc-850 hover:bg-zinc-800 border border-zinc-700/80 text-white text-xs font-medium tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Calendar className="w-3.5 h-3.5" />
             Schedule with Mentor
-          </Button>
-        </Card>
+          </button>
+        </div>
       </div>
 
-      {/* Interview History & Records */}
-      <Card className="space-y-4">
-        <CardHeader>
-          <CardTitle>Interview History & Evaluation Reports</CardTitle>
-          <Badge variant="neutral" size="sm">Past & Upcoming</Badge>
-        </CardHeader>
+      {/* 3. Session History & Evaluation Records */}
+      <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-white">
+            Interview Records
+          </h2>
+          <span className="text-xs text-zinc-500 font-normal">
+            {interviews.length} sessions logged
+          </span>
+        </div>
 
         {loading ? (
-          <div className="py-8 text-center">
-            <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="py-12 text-center">
+            <div className="w-6 h-6 border-2 border-zinc-500 border-t-white rounded-full animate-spin mx-auto" />
           </div>
         ) : interviews.length === 0 ? (
-          <p className="text-xs text-slate-500 py-6 text-center">
-            No interviews scheduled or completed yet. Launch a system mock above to begin!
-          </p>
+          <div className="py-10 text-center space-y-2 border border-dashed border-zinc-800/80 rounded-xl p-6">
+            <p className="text-xs text-zinc-400 font-light">
+              No interview sessions recorded yet. Launch an AI interview above to get started.
+            </p>
+          </div>
         ) : (
-          <div className="divide-y divide-slate-100 dark:divide-navy-800">
+          <div className="divide-y divide-zinc-800/60">
             {interviews.map((iv) => (
-              <div key={iv.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div
+                key={iv.id}
+                className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+              >
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={iv.status === 'COMPLETED' ? 'success' : 'warning'} size="sm">
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-medium ${
+                        iv.status === 'COMPLETED'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-amber-500/10 text-amber-300 border border-amber-500/20'
+                      }`}
+                    >
                       {iv.status}
-                    </Badge>
-                    <span className="font-bold text-xs text-slate-900 dark:text-white">
-                      {iv.type} Mock Interview - {iv.company || 'General'}
                     </span>
-                    <span className="text-[11px] text-slate-400">({iv.targetRole})</span>
+                    <span className="font-medium text-white">
+                      {iv.type} Mock • {iv.company || 'General'}
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                  <div className="flex items-center gap-3 text-zinc-500 text-[11px] font-light">
                     <span>
                       {iv.scheduledFor
-                        ? `Scheduled: ${new Date(iv.scheduledFor).toLocaleDateString()}`
-                        : `Conducted: ${new Date(iv.createdAt).toLocaleDateString()}`}
+                        ? `Date: ${new Date(iv.scheduledFor).toLocaleDateString()}`
+                        : `Date: ${new Date(iv.createdAt).toLocaleDateString()}`}
                     </span>
                     {iv.interviewer && (
-                      <span>Mentor: <strong>{iv.interviewer.name}</strong></span>
+                      <span>Mentor: {iv.interviewer.name}</span>
                     )}
                     {iv.overallRating != null && (
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-emerald-400 font-medium">
                         Rating: {iv.overallRating} / 10
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2">
                   {iv.meetingLink && iv.status !== 'COMPLETED' && (
-                    <a href={iv.meetingLink} target="_blank" rel="noreferrer">
-                      <Button size="sm">
-                        <ExternalLink className="w-3.5 h-3.5 mr-1" />
-                        Join Call
-                      </Button>
+                    <a
+                      href={iv.meetingLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Join Call
                     </a>
                   )}
 
                   {iv.status === 'COMPLETED' && (
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    <button
+                      type="button"
                       onClick={() => setSelectedInterview(iv)}
+                      className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/60 text-xs font-normal transition-colors cursor-pointer"
                     >
-                      View Report & Rubric
-                    </Button>
+                      View Report
+                    </button>
                   )}
                 </div>
               </div>
             ))}
           </div>
         )}
-      </Card>
+      </div>
 
-      {/* System Mock Modal */}
+      {/* Modal: AI Session Configuration */}
       <Modal
         isOpen={showSystemModal}
         onClose={() => setShowSystemModal(false)}
-        title="Configure Interactive System Mock Interview"
-        description="Select interview type, company culture focus, and target role."
+        title="Configure AI Mock Interview"
       >
-        <div className="space-y-4 pt-2">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Interview Track
-            </label>
+        <div className="space-y-4 pt-1">
+          <div className="space-y-1.5">
+            <label className="text-xs text-zinc-400 font-medium">Domain Category</label>
             <select
               value={systemType}
               onChange={(e) => setSystemType(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-zinc-600"
             >
-              <option value="HR">HR & Behavioral (STAR Technique)</option>
-              <option value="TECHNICAL">Technical & Core Systems</option>
-              <option value="MANAGERIAL">Managerial & Prioritization</option>
-              <option value="COMPANY_SPECIFIC">Company Culture Specific</option>
+              <option value="TECHNICAL">Technical & DSA</option>
+              <option value="HR">HR & Behavioral</option>
+              <option value="MANAGERIAL">Managerial & System Design</option>
             </select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Target Company
-            </label>
-            <select
+          <div className="space-y-1.5">
+            <label className="text-xs text-zinc-400 font-medium">Target Company</label>
+            <input
+              type="text"
               value={systemCompany}
               onChange={(e) => setSystemCompany(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
-            >
-              <option>Amazon</option>
-              <option>Microsoft</option>
-              <option>TCS</option>
-              <option>Infosys</option>
-              <option>Freshworks</option>
-              <option>Zoho</option>
-              <option>Accenture</option>
-              <option>Deloitte</option>
-            </select>
+              className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-zinc-600"
+            />
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Target Role
-            </label>
+          <div className="space-y-1.5">
+            <label className="text-xs text-zinc-400 font-medium">Target Role</label>
             <input
               type="text"
               value={systemRole}
               onChange={(e) => setSystemRole(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-zinc-600"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" size="sm" onClick={() => setShowSystemModal(false)}>
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowSystemModal(false)}
+              className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white"
+            >
               Cancel
-            </Button>
-            <Button size="sm" onClick={handleStartSystemInterview}>
-              Begin Mock Interview
-            </Button>
+            </button>
+            <button
+              type="button"
+              onClick={handleStartSystemInterview}
+              className="px-5 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-medium cursor-pointer"
+            >
+              Start Session
+            </button>
           </div>
         </div>
       </Modal>
 
-      {/* Book Mentor Modal */}
+      {/* Modal: Book Mentor Session */}
       <Modal
         isOpen={showMentorModal}
         onClose={() => setShowMentorModal(false)}
-        title="Schedule 1-on-1 Mock Interview with Mentor"
-        description="Connect directly with experienced technical mentors."
+        title="Schedule Mentor Interview"
       >
-        <div className="space-y-4 pt-2">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Select Mentor
-            </label>
+        <div className="space-y-4 pt-1">
+          <div className="space-y-1.5">
+            <label className="text-xs text-zinc-400 font-medium">Select Mentor</label>
             <select
               value={selectedMentorId}
               onChange={(e) => setSelectedMentorId(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-zinc-600"
             >
               {mentors.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -335,120 +335,62 @@ export const InterviewHub: React.FC = () => {
             </select>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Interview Track
-            </label>
-            <select
-              value={mentorType}
-              onChange={(e) => setMentorType(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
-            >
-              <option value="TECHNICAL">Technical & DSA Live Coding</option>
-              <option value="HR">HR & Behavioral STAR Evaluation</option>
-              <option value="SYSTEM_DESIGN">System Architecture & Design</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Target Company
-            </label>
-            <select
-              value={mentorCompany}
-              onChange={(e) => setMentorCompany(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
-            >
-              <option>Amazon</option>
-              <option>Microsoft</option>
-              <option>TCS</option>
-              <option>Infosys</option>
-              <option>Zoho</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Date & Time Slot
-            </label>
+          <div className="space-y-1.5">
+            <label className="text-xs text-zinc-400 font-medium">Scheduled Date & Time</label>
             <input
               type="datetime-local"
               value={mentorDate}
               onChange={(e) => setMentorDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-lg text-slate-900 dark:text-white"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-zinc-600"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button variant="outline" size="sm" onClick={() => setShowMentorModal(false)}>
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowMentorModal(false)}
+              className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white"
+            >
               Cancel
-            </Button>
-            <Button size="sm" onClick={handleBookMentor}>
-              Confirm Interview Slot
-            </Button>
+            </button>
+            <button
+              type="button"
+              onClick={handleBookMentor}
+              className="px-5 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-medium cursor-pointer"
+            >
+              Confirm Booking
+            </button>
           </div>
         </div>
       </Modal>
 
-      {/* Feedback Report Modal */}
+      {/* Modal: View Report */}
       {selectedInterview && (
         <Modal
           isOpen={!!selectedInterview}
           onClose={() => setSelectedInterview(null)}
-          title={`Evaluation Report: ${selectedInterview.type} Mock`}
-          description={`Conducted for ${selectedInterview.company} (${selectedInterview.targetRole})`}
-          maxWidth="lg"
+          title="Interview Evaluation Report"
         >
-          <div className="space-y-4 pt-2 text-xs">
-            {/* Overall Rating Banner */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-800 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400">Overall Rating</span>
-                <div className="text-2xl font-black text-brand-600 dark:text-brand-400">
-                  {selectedInterview.overallRating} / 10
-                </div>
+          <div className="space-y-4 pt-1">
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-zinc-400 font-medium">Overall Score</span>
+                <span className="text-sm font-semibold text-emerald-400">
+                  {selectedInterview.overallRating != null ? `${selectedInterview.overallRating} / 10` : 'Evaluated'}
+                </span>
               </div>
-              <Badge variant="brand" size="md">
-                {selectedInterview.overallRating >= 8.0 ? 'Exceeds Bar' : 'Meets Bar'}
-              </Badge>
+              <p className="text-xs text-zinc-300 font-light leading-relaxed">
+                {selectedInterview.feedbackNotes || 'Performance met target expectations. Recommended to practice dynamic programming and STAR behavioral structures.'}
+              </p>
             </div>
-
-            {/* Rubrics breakdown */}
-            {selectedInterview.ratings && (
-              <div className="space-y-2">
-                <span className="font-bold text-slate-900 dark:text-white block">
-                  Rubric Assessment:
-                </span>
-                <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
-                  {Object.entries(JSON.parse(selectedInterview.ratings)).map(([k, v]: any) => (
-                    <div
-                      key={k}
-                      className="p-2.5 rounded bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 flex justify-between"
-                    >
-                      <span className="capitalize">{k.replace(/([A-Z])/g, ' $1')}:</span>
-                      <strong className="text-brand-600">{v} / 10</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Feedback text */}
-            {selectedInterview.feedback && (
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-navy-800 space-y-1">
-                <span className="font-bold text-slate-900 dark:text-white block">
-                  Detailed Qualitative Feedback:
-                </span>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
-                  {selectedInterview.feedback}
-                </p>
-              </div>
-            )}
-
-            <div className="flex justify-end pt-2">
-              <Button size="sm" onClick={() => setSelectedInterview(null)}>
-                Close Report
-              </Button>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedInterview(null)}
+                className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium"
+              >
+                Close
+              </button>
             </div>
           </div>
         </Modal>
@@ -456,3 +398,5 @@ export const InterviewHub: React.FC = () => {
     </div>
   );
 };
+
+export default InterviewHub;

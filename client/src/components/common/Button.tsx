@@ -15,26 +15,25 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  // Unslop Standards: Quiet chrome, 4px grid steps, subtle contrast, no bouncy scales
   const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed select-none active:brightness-95';
+    'inline-flex items-center justify-center font-medium rounded-xl transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98] cursor-pointer';
 
   const variants = {
     primary:
-      'bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 focus:ring-slate-900 shadow-xs border border-transparent',
+      'bg-white hover:bg-zinc-200 text-black shadow-sm font-medium border border-transparent',
     secondary:
-      'bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-700',
+      'bg-zinc-800 hover:bg-zinc-750 text-white border border-zinc-700/80',
     outline:
-      'border border-slate-200 hover:bg-slate-50 text-slate-700 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800/60 focus:ring-slate-400',
+      'border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800/60 text-zinc-300',
     ghost:
-      'hover:bg-slate-100 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 focus:ring-slate-400',
+      'text-zinc-400 hover:text-white hover:bg-zinc-850',
     destructive:
-      'bg-rose-600 hover:bg-rose-700 text-white focus:ring-rose-500 shadow-xs',
+      'bg-rose-950/60 hover:bg-rose-900/80 text-rose-200 border border-rose-800/80',
   };
 
   const sizes = {
     sm: 'text-xs h-8 px-3 gap-1.5',
-    md: 'text-sm h-9 px-4 gap-2',
+    md: 'text-xs sm:text-sm h-9 px-4 gap-2',
     lg: 'text-sm h-11 px-5 gap-2.5 font-medium',
   };
 

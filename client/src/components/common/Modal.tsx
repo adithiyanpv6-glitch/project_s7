@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -42,33 +43,40 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-navy-950/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxW} bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-800 rounded-2xl p-6 shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-150`}
+        className={`relative w-full ${maxW} bg-[#111217] border border-zinc-800/90 rounded-2xl shadow-2xl p-6 sm:p-7 space-y-5 z-10 text-white`}
       >
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-medium text-white tracking-wide">
+              {title}
+            </h3>
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{description}</p>
+              <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                {description}
+              </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-navy-800 transition-colors"
+            className="text-zinc-500 hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-zinc-800"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div>{children}</div>
+        <div className="text-sm">{children}</div>
       </div>
     </div>
   );
