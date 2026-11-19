@@ -10,7 +10,36 @@ import {
   AlertTriangle,
   History,
   Loader2,
+  Sparkles,
+  ArrowRight,
+  TrendingUp,
 } from 'lucide-react';
+
+interface CategoryScores {
+  impact: number;
+  formatting: number;
+  keywords: number;
+  sections: number;
+}
+
+interface BulletFeedback {
+  original: string;
+  improved: string;
+  issue: string;
+}
+
+interface ResumeAnalysisData {
+  id?: string;
+  fileName?: string;
+  targetRole?: string;
+  overallScore: number;
+  categoryScores?: CategoryScores;
+  matchedKeywords?: string[];
+  missingKeywords?: string[];
+  bulletFeedback?: BulletFeedback[];
+  generalTips?: string[];
+  createdAt?: string;
+}
 
 export const ResumeAnalyzer: React.FC = () => {
   const { showToast } = useNotifications();
@@ -21,7 +50,7 @@ export const ResumeAnalyzer: React.FC = () => {
   const [targetRole, setTargetRole] = useState('Software Development Engineer');
   const [isUploading, setIsUploading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [currentAnalysis, setCurrentAnalysis] = useState<any | null>(null);
+  const [currentAnalysis, setCurrentAnalysis] = useState<ResumeAnalysisData | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
   const fetchHistory = async () => {
@@ -67,7 +96,7 @@ export const ResumeAnalyzer: React.FC = () => {
         }
 
         setRawText(data.text);
-        showToast(`Parsed PDF "${file.name}" successfully! Review or click Analyze.`, 'success');
+        showToast(`Parsed PDF "${file.name}" successfully! Review text or click Analyze.`, 'success');
       } catch (err: any) {
         showToast(err.message || 'Failed to extract text from PDF.', 'error');
       } finally {
@@ -93,7 +122,7 @@ export const ResumeAnalyzer: React.FC = () => {
 
     setIsAnalyzing(true);
     try {
-      const res = await api.post<any>('/resume/analyze', {
+      const res = await api.post<ResumeAnalysisData>('/resume/analyze', {
         rawText,
         fileName,
         targetRole,
@@ -109,6 +138,34 @@ export const ResumeAnalyzer: React.FC = () => {
       setIsAnalyzing(false);
     }
   };
+
+  // Helper to ensure array format
+  const getArray = (val: any): string[] => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    try {
+      return JSON.parse(val);
+    } catch {
+      return [];
+    }
+  };
+
+  const matchedKws = getArray(currentAnalysis?.matchedKeywords);
+  const missingKws = getArray(currentAnalysis?.missingKeywords);
+  const tips = getArray(currentAnalysis?.generalTips);
+  const bulletFeedbacks = currentAnalysis?.bulletFeedback
+    ? Array.isArray(currentAnalysis.bulletFeedback)
+      ? currentAnalysis.bulletFeedback
+      : typeof currentAnalysis.bulletFeedback === 'string'
+      ? JSON.parse(currentAnalysis.bulletFeedback)
+      : []
+    : [];
+
+  const categoryScores = currentAnalysis?.categoryScores
+    ? typeof currentAnalysis.categoryScores === 'string'
+      ? JSON.parse(currentAnalysis.categoryScores)
+      : currentAnalysis.categoryScores
+    : null;
 
   return (
     <div
@@ -129,8 +186,8 @@ export const ResumeAnalyzer: React.FC = () => {
 
       {/* 2. Main Two-Column Analysis Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Upload / Paste Content (6 Columns) */}
-        <div className="lg:col-span-6 space-y-5">
+        {/* Left Column: Input, Upload & History (5 Columns) */}
+        <div className="lg:col-span-5 space-y-5">
           <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-4">
             <h2 className="text-sm font-medium text-white">
               Target Role & Document Upload
@@ -173,7 +230,7 @@ export const ResumeAnalyzer: React.FC = () => {
               </div>
 
               <textarea
-                rows={9}
+                rows={11}
                 value={rawText}
                 onChange={(e) => setRawText(e.target.value)}
                 placeholder="Upload your resume PDF above or paste resume text here (projects, technical skills, education, work experience)..."
@@ -215,70 +272,164 @@ export const ResumeAnalyzer: React.FC = () => {
           )}
         </div>
 
-        {/* Right Column: ATS Evaluation Results (6 Columns) */}
-        <div className="lg:col-span-6">
+        {/* Right Column: Comprehensive ATS Evaluation Report (7 Columns) */}
+        <div className="lg:col-span-7">
           {currentAnalysis ? (
             <div className="p-6 rounded-2xl bg-[#111217] border border-zinc-800/80 shadow-sm space-y-6">
               {/* Score Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
-                <div>
+              <div className="flex items-center justify-between pb-5 border-b border-zinc-800/80">
+                <div className="space-y-1">
                   <span className="text-xs text-zinc-400 font-medium block">
-                    ATS Readiness Rating
+                    ATS Placement Readiness Score
                   </span>
-                  <h3 className="text-xl font-semibold text-white tracking-tight mt-1">
+                  <h3 className="text-xl font-semibold text-white tracking-tight">
                     {currentAnalysis.targetRole || targetRole}
                   </h3>
+                  <span className="text-[11px] text-zinc-500 font-light block">
+                    Target Role: {targetRole}
+                  </span>
                 </div>
 
-                <ProgressRing
-                  value={currentAnalysis.overallScore || 80}
-                  size={85}
-                  strokeWidth={7}
-                  label="Score"
-                />
-              </div>
-
-              {/* Strengths */}
-              <div className="space-y-2">
-                <span className="text-xs font-medium text-emerald-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Key Strengths
-                </span>
-                <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 text-xs text-zinc-300 font-light leading-relaxed">
-                  {currentAnalysis.strengths
-                    ? typeof currentAnalysis.strengths === 'string'
-                      ? JSON.parse(currentAnalysis.strengths).join(' • ')
-                      : currentAnalysis.strengths.join(' • ')
-                    : 'Clear project impact metrics, strong technical proficiencies in core languages.'}
+                <div className="text-right">
+                  <ProgressRing
+                    value={currentAnalysis.overallScore || 0}
+                    size={85}
+                    strokeWidth={7}
+                    label="Score"
+                  />
                 </div>
               </div>
 
-              {/* Missing Keywords */}
-              <div className="space-y-2">
-                <span className="text-xs font-medium text-amber-300 flex items-center gap-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5" /> Recommended Keywords
-                </span>
-                <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 text-xs text-zinc-300 font-light leading-relaxed">
-                  {currentAnalysis.missingKeywords
-                    ? typeof currentAnalysis.missingKeywords === 'string'
-                      ? JSON.parse(currentAnalysis.missingKeywords).join(', ')
-                      : currentAnalysis.missingKeywords.join(', ')
-                    : 'CI/CD Pipelines, System Architecture, Unit Testing, AWS Cloud Deployment'}
-                </div>
-              </div>
+              {/* 4 Category Pillar Diagnostic Bars */}
+              {categoryScores && (
+                <div className="space-y-3 p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
+                  <span className="text-xs font-medium text-white block">
+                    Category Diagnostic Breakdown
+                  </span>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] text-zinc-400">
+                        <span>Impact & Metrics</span>
+                        <span className="font-mono text-white">{categoryScores.impact}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${categoryScores.impact}%` }} />
+                      </div>
+                    </div>
 
-              {/* Improvement Suggestions */}
-              <div className="space-y-2">
-                <span className="text-xs font-medium text-zinc-300 block">
-                  Actionable Feedback
-                </span>
-                <p className="text-xs text-zinc-400 font-light leading-relaxed">
-                  {currentAnalysis.suggestions ||
-                    'Quantify achievements with measurable percentages and specify your exact role in collaborative project deliveries.'}
-                </p>
-              </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] text-zinc-400">
+                        <span>Keyword Density</span>
+                        <span className="font-mono text-white">{categoryScores.keywords}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-teal-400 rounded-full" style={{ width: `${categoryScores.keywords}%` }} />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] text-zinc-400">
+                        <span>Standard Sections</span>
+                        <span className="font-mono text-white">{categoryScores.sections}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-white rounded-full" style={{ width: `${categoryScores.sections}%` }} />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] text-zinc-400">
+                        <span>Formatting & Length</span>
+                        <span className="font-mono text-white">{categoryScores.formatting}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-zinc-400 rounded-full" style={{ width: `${categoryScores.formatting}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Matched Keywords */}
+              {matchedKws.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-xs font-medium text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Matched Industry Keywords ({matchedKws.length})
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {matchedKws.map((kw, i) => (
+                      <span
+                        key={i}
+                        className="px-2.5 py-1 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-xs font-light"
+                      >
+                        ✓ {kw}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Missing Recommended Keywords */}
+              {missingKws.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-xs font-medium text-amber-300 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    Missing High-Demand Skills for {targetRole} ({missingKws.length})
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {missingKws.map((kw, i) => (
+                      <span
+                        key={i}
+                        className="px-2.5 py-1 rounded-lg bg-amber-950/30 border border-amber-500/30 text-amber-300 text-xs font-light"
+                      >
+                        + {kw}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Bullet Point AI Improvements */}
+              {bulletFeedbacks.length > 0 && (
+                <div className="space-y-3 pt-2 border-t border-zinc-800/80">
+                  <span className="text-xs font-medium text-white block">
+                    AI Bullet Point Rewrites (Google X-Y-Z Impact Formula)
+                  </span>
+                  <div className="space-y-3">
+                    {bulletFeedbacks.map((bf: BulletFeedback, idx: number) => (
+                      <div key={idx} className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2 text-xs">
+                        <div className="space-y-1">
+                          <span className="text-[10px] text-zinc-500 font-mono uppercase">Original Bullet:</span>
+                          <p className="text-zinc-400 line-through font-light leading-relaxed">{bf.original}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-[10px] text-emerald-400 font-mono uppercase">AI Enhanced (High Impact):</span>
+                          <p className="text-white font-medium leading-relaxed">{bf.improved}</p>
+                        </div>
+                        <p className="text-[11px] text-zinc-500 italic pt-1">{bf.issue}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* General Tips & Recommendations */}
+              {tips.length > 0 && (
+                <div className="space-y-2 pt-2 border-t border-zinc-800/80">
+                  <span className="text-xs font-medium text-zinc-300 block">
+                    Actionable Placement Optimization Tips
+                  </span>
+                  <ul className="space-y-1.5 text-xs text-zinc-400 font-light leading-relaxed list-disc list-inside">
+                    {tips.map((tip, i) => (
+                      <li key={i}>{tip}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="p-12 rounded-2xl bg-[#111217] border border-dashed border-zinc-800/80 text-center text-xs text-zinc-500">
+            <div className="p-16 rounded-2xl bg-[#111217] border border-dashed border-zinc-800/80 text-center text-xs text-zinc-500">
               Upload your PDF resume on the left to view comprehensive ATS analysis and keyword suggestions.
             </div>
           )}
